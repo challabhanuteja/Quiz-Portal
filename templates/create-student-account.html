@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}
+create student account
+{% endblock title %}
+
+{% block body %}
+<div class="container my-4">
+    <form method="post" action = "/create-student-account/">
+    {% csrf_token %}
+        <div class="form-group">
+            <label for="formGroupExampleInput">First Name</label>
+            <input type="text" class="form-control" id="formGroupExampleInput" name="fname">
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">Last Name</label>
+            <input type="text" class="form-control" id="formGroupExampleInput2" name = "lname">
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">Gender</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" value="Male"
+                    checked>
+                <label class="form-check-label" for="exampleRadios1">
+                    Male
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" value="Female">
+                <label class="form-check-label" for="exampleRadios2">
+                    Female
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios3" value="Others">
+                <label class="form-check-label" for="exampleRadios3">
+                    Others
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">School Name</label>
+            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name">
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">ID Number</label>
+            <input type="text" class="form-control" id="formGroupExampleInput4" name = "idno">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "email">
+            <small id="emailHelp" class="form-text text-muted" >We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" name = "psw1">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Re-enter Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" name = "psw2">
+        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            <strong>{{message}}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock body %}

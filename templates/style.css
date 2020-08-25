@@ -1,0 +1,11 @@
+.btn-outline-success
+{
+    color:rgb(0, 0, 0);
+    background-color: skyblue;
+}
+.btn-outline-success:hover
+{
+    color:blue;
+    background-color: skyblue;
+    border: 2px solid blue;
+}

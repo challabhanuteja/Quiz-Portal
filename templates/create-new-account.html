@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+create new account
+{% endblock title %}
+
+{% block body %}
+{% comment %} <div class="container-fluid d-flex justify-content-center align-items-center">
+    
+    <div class="card" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+    <div class="card" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+</div> {% endcomment %}
+ 
+
+    
+
+    <div class="container my-5 py-5">
+      <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Student</h4>
+          </div>
+          <div class="card-body">
+            <img src="/static/student.jpg" alt="..." class="img-thumbnail">
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Write Quizzes</li>
+              <li>Get score</li>
+              <li>Get solutions for wrong answers</li>
+            </ul>
+            <a href="/create-student-account/">
+                <button type="button" class="btn btn-lg btn-block btn-primary">Signup as Student</button>
+            </a> 
+          </div>
+        </div>
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Teacher</h4>
+          </div>
+          <div class="card-body">
+            <img src="/static/teacher.jpg" alt="..." class="img-thumbnail">
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Create Quizzes</li>
+              <li>Share Quiz link with your Students</li>
+              <li>Track your Student's Scores</li>
+            </ul>
+            <a href="/create-teacher-account/">
+                <button type="button" class="btn btn-lg btn-block btn-primary">Signup as Teacher</button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+{% endblock body %}
