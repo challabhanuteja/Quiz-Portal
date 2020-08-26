@@ -10,13 +10,13 @@ create student account
     {% csrf_token %}
         <div class="form-group">
             <label for="formGroupExampleInput">First Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput" name="fname">
+            <input type="text" class="form-control" id="formGroupExampleInput" name="fname" required value={{fname}} >
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Last Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput2" name = "lname">
+            <input type="text" class="form-control" id="formGroupExampleInput2" name = "lname" required value={{lname}} >
         </div>
-        <div class="form-group">
+        <div class="form-group" value={{gender}}>
             <label for="formGroupExampleInput2">Gender</label>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" value="Male"
@@ -25,14 +25,23 @@ create student account
                     Male
                 </label>
             </div>
+            
             <div class="form-check">
+                {% if gender == 'Female' %}
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" value="Female" checked>            
+                {% else %}
                 <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" value="Female">
+                {% endif %}
                 <label class="form-check-label" for="exampleRadios2">
                     Female
                 </label>
             </div>
             <div class="form-check">
+                {% if gender == 'Others' %}
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios3" value="Others" checked>
+                {% else %}                
                 <input class="form-check-input" type="radio" name="gender" id="exampleRadios3" value="Others">
+                {% endif %}
                 <label class="form-check-label" for="exampleRadios3">
                     Others
                 </label>
@@ -40,24 +49,28 @@ create student account
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">School Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name">
+            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value = {{school_name}}>
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">ID Number</label>
-            <input type="text" class="form-control" id="formGroupExampleInput4" name = "idno">
+            <input type="text" class="form-control" id="formGroupExampleInput4" name = "idno" required value= {{idno}} >
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">Mobile Number</label>
+            <input type="text" class="form-control" id="formGroupExampleInput5" name = "mobile_number" required value= {{mobile_number}} >
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "email">
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "email" required value= {{email}} >
             <small id="emailHelp" class="form-text text-muted" >We'll never share your email with anyone else.</small>
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" name = "psw1">
+            <input type="password" class="form-control" id="exampleInputPassword1" required name = "psw1">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Re-enter Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" name = "psw2">
+            <input type="password" class="form-control" id="exampleInputPassword1" required name = "psw2">
         </div>
         {% if messages %}
             {% for message in messages %}

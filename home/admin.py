@@ -1,5 +1,4 @@
 from django.contrib import admin
-from home.models import Student, Teacher
+from home.models import QPUser
 # Register your models here.
-admin.site.register(Student)
-admin.site.register(Teacher)
+admin.site.register(QPUser)
