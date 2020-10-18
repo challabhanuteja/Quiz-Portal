@@ -7,36 +7,24 @@ from home.models import QPUser
 def index(request):
     return render(request, 'index.html')
 
-def studentLogin(request):
+def userLogin(request):
     if request.method == "POST":
         email = request.POST["email"]
         password = request.POST["password"]
         s = authenticate(username = email,password =  password)
-        
-        if s==None:
-            messages.warning(request, 'Wrong email or password')
-            return render(request, "student-login.html")
-        elif s.is_student == False and s.is_teacher == True:
-            return HttpResponse("<h1>You are not a student kindly login from teacher login</h1>")
-        elif s.is_student == True:
+        # need to change this code
+        if s !=None:
             login(request,s)
-            return redirect('/student-account/')
-    return render(request, "student-login.html")
+            return redirect('/user-account/')
+        else:
+            messages.warning(request, 'Invalid username or password')
+            return redirect("/user-login/")
+    return render(request, "user-login.html")
+def userLogout(request):
+    logout(request)
+    messages.success(request, 'You have been logged out successfully')
+    return redirect("/user-login/")
 
-def teacherLogin(request):
-    if request.method == "POST":
-        email = request.POST["email"]
-        password = request.POST["password"]
-        s = authenticate(username = email,password =  password)
-        if s==None:
-            messages.warning(request, 'Wrong email or password')
-            return render(request, "teacher-login.html")
-        elif s.is_teacher == False and  s.is_student == True:
-            return HttpResponse("<h1>You are not a teacher kindly login from student login</h1>")
-        elif s.is_teacher == True:
-            login(request,s)
-            return redirect('/teacher-account/')
-    return render(request, "teacher-login.html")
     
 def createNewAccount(request):
     return render(request, "create-new-account.html")
@@ -127,10 +115,12 @@ def createTeacherAccount(request):
     return render(request, "create-teacher-account.html")
     
 
+def aboutUs(request):
+    return render(request, "about-us.html")
 def contactUs(request):
     return render(request, "contact-us.html")
 
-def teacherAccount(request):
-    return render(request, "teacher-account.html")
-def studentAccount(request):
-    return render(request, "student-account.html")
+def userAccount(request):
+    return render(request, "user-account.html")
+
+

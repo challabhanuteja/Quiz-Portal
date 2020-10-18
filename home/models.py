@@ -14,7 +14,7 @@ class QPUser(AbstractUser):
     def __str__(self):
         if self.is_student == True:
             return "S"+"-"+self.idno+"-"+self.first_name+"-"+self.last_name
-        elif self.is_student == True:
+        elif self.is_teacher == True:
             return "T"+"-"+self.idno+"-"+self.first_name+"-"+self.last_name
         else:
             return "Admin"
