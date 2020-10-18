@@ -10,6 +10,8 @@ urlpatterns = [
     path('contact-us/', views.contactUs, name="contactUs"),
     path('user-account/', views.userAccount, name="userAccount"),
     path('about-us/', views.aboutUs, name="aboutUs"),
-    path('logout/', views.userLogout, name="userLogout"),
+    path('user-logout/', views.userLogout, name="userLogout"),
+    path('user-dashboard/', views.userDashboard, name="userDashboard"),
+    path('edit-user-account/', views.editUserAcc, name="editUserAcc")
 
 ]

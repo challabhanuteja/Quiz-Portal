@@ -12,23 +12,23 @@ user account
     {% csrf_token %}
         <div class="form-group">
             <label for="formGroupExampleInput">First Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput" name="fname" value={{user.first_name}} disabled = true>
+            <input type="text" class="form-control" id="formGroupExampleInput" name="fname" required value={{user.first_name}} >
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Last Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput2" name = "lname" required value={{user.last_name}} disabled = true >
+            <input type="text" class="form-control" id="formGroupExampleInput2" name = "lname" required value={{user.last_name}}  >
         </div>
         <div class="form-group" value={{gender}}>
             <label for="formGroupExampleInput2">Gender</label>
             <div class="form-check">
                 {%if user.gender == 'Male'%}
                 <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" value="Male"
-                    checked disabled = true>
+                    checked >
                 <label class="form-check-label" for="exampleRadios1">
                     Male
                 </label>
                 {% else %}
-                <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" value="Male" disabled = true>
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" value="Male" >
                 <label class="form-check-label" for="exampleRadios1">
                     Male
                 </label>
@@ -37,9 +37,9 @@ user account
             
             <div class="form-check">
                 {% if user.gender == 'Female' %}
-                <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" value="Female" checked disabled = true>            
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" value="Female" checked >            
                 {% else %}
-                <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" value="Female" disabled = true>
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" value="Female" >
                 {% endif %}
                 <label class="form-check-label" for="exampleRadios2">
                     Female
@@ -47,9 +47,9 @@ user account
             </div>
             <div class="form-check">
                 {% if user.gender == 'Others' %}
-                <input class="form-check-input" type="radio" name="gender" id="exampleRadios3" value="Others" checked disabled = true>
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios3" value="Others" checked >
                 {% else %}                
-                <input class="form-check-input" type="radio" name="gender" id="exampleRadios3" value="Others" disabled = true>
+                <input class="form-check-input" type="radio" name="gender" id="exampleRadios3" value="Others" >
                 {% endif %}
                 <label class="form-check-label" for="exampleRadios3">
                     Others
@@ -58,11 +58,11 @@ user account
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">School Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value={{user.school_name}} disabled = true>
+            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value={{user.school_name}} >
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">ID Number</label>
-            <input type="text" class="form-control" id="formGroupExampleInput4" name = "idno" required value= {{user.idno}} disabled = true>
+            <input type="text" class="form-control" id="formGroupExampleInput4" name = "idno" required value= {{user.idno}} >
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Profession</label>
@@ -77,7 +77,7 @@ user account
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Mobile Number</label>
-            <input type="text" class="form-control" id="formGroupExampleInput5" name = "mobile_number" required value= {{user.mobile_number}} disabled = true>
+            <input type="text" class="form-control" id="formGroupExampleInput5" name = "mobile_number" required value= {{user.mobile_number}} >
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>

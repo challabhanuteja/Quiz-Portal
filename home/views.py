@@ -15,7 +15,7 @@ def userLogin(request):
         # need to change this code
         if s !=None:
             login(request,s)
-            return redirect('/user-account/')
+            return redirect('/user-dashboard/')
         else:
             messages.warning(request, 'Invalid username or password')
             return redirect("/user-login/")
@@ -122,5 +122,29 @@ def contactUs(request):
 
 def userAccount(request):
     return render(request, "user-account.html")
+
+def userDashboard(request):
+    return render(request, "user-dashboard.html")
+
+def editUserAcc(request):
+    if request.method == "POST":
+        fname = request.POST.get("fname")
+        lname = request.POST.get("lname")
+        gender = request.POST.get("gender")
+        school_name = request.POST.get("school_name")
+        idno = request.POST.get("idno")
+        email = request.POST.get("email")
+        user= request.user
+        user.first_name = fname
+        user.last_name = lname
+        user.gender = gender
+        user.school_name = school_name
+        user.idno = idno
+        user.save()
+        messages.success(request, "Your details are updated successfully")
+        return redirect("/user-account/")
+        
+    return render(request, "edit-user-account.html")
+
 
 
