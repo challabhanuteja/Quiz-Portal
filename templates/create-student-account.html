@@ -6,7 +6,7 @@ create student account
 
 {% block body %}
 <div class="container my-4">
-    <form method="post" action = "/create-student-account/">
+    <!-- <form method="post" action = "/create-student-account/">
     {% csrf_token %}
         <div class="form-group">
             <label for="formGroupExampleInput">First Name</label>
@@ -83,6 +83,21 @@ create student account
             {% endfor %}
         {% endif %}
         <button type="submit" class="btn btn-primary">Submit</button>
+    </form> -->
+    <form action="/create-student-account/" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            <strong>{{message}}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        <button type="submit">Submit</button>
     </form>
 </div>
 {% endblock body %}

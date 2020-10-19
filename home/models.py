@@ -24,7 +24,7 @@ class QPUser(AbstractUser):
     school = models.ForeignKey(School, verbose_name="School", on_delete=models.CASCADE, default = 1)
     # school_name = school.name
     section = models.ForeignKey(Section, verbose_name="Section", on_delete=models.CASCADE, default = 1)
-    idno = models.CharField(max_length=10, unique=True)
+    idno = models.CharField(max_length=10)
     date_of_birth = models.DateField(default = datetime.today)
     is_teacher = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)

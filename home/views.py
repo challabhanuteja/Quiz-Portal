@@ -3,9 +3,11 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
 from datetime import datetime
-from home.models import QPUser
+from home.models import *
 from django.core.mail import send_mail
 from django.conf import settings
+from .forms import QCUserForm
+
 def index(request):
     return render(request, 'index.html')
 
@@ -32,89 +34,134 @@ def createNewAccount(request):
     return render(request, "create-new-account.html")
     
 def createStudentAccount(request):
-    
-    if request.method == "POST":
-        psw1 = request.POST.get("psw1")
-        psw2 = request.POST.get("psw2")
-        fname = request.POST.get("fname")
-        lname = request.POST.get("lname")
-        gender = request.POST.get("gender")
-        school_name = request.POST.get("school_name")
-        idno = request.POST.get("idno")
-        email = request.POST.get("email")
-        mobile_number = request.POST.get("mobile_number")
-        #need to validate mobile number
-        if psw1 != psw2:
-            messages.warning(request, 'password mismatch')
-            context = {
-                'fname' : fname,
-                'lname' : lname,
-                'gender' : gender,
-                'school_name' : school_name,
-                'idno':idno,
-                'email':email
-            }
-            return render(request, "create-student-account.html",context)
-        else:
-            # print(fname,sname, gender, school_name, idno, email)
-            # return render(request, "create-student-account.html",context)
+    context ={} 
+  
+    # create object of form 
+    form = QCUserForm(request.POST) 
+    if request.method == "POST":  
+        if form.is_valid(): 
+            student = QCUserForm() 
             student = QPUser()
-            student.first_name = fname
-            student.last_name = lname
-            student.gender = gender
-            student.school_name = school_name
-            student.idno = idno
-            student.mobile_number = mobile_number
-            student.email = email
-            student.set_password(psw1)
+            student.first_name = form.cleaned_data['first_name']
+            student.last_name = form.cleaned_data['last_name']
+            student.gender = form.cleaned_data['gender']
+            student.school = form.cleaned_data['school']
+            student.idno = form.cleaned_data['idno']
+            student.mobile_number = form.cleaned_data['mobile_number']
+            student.email = form.cleaned_data['email']
+            student.set_password(form.cleaned_data['password'])
             student.is_student = True
             student.is_teacher = False
-            student.username = email
+            student.username = student.email
             student.date_joined = datetime.today()
+            student.date_of_birth = form.cleaned_data['date_of_birth']
             student.save()
             messages.success(request, 'You have been registered successfully')
+    context['form']= form 
+    # if request.method == "POST":
+    #     psw1 = request.POST.get("psw1")
+    #     psw2 = request.POST.get("psw2")
+    #     fname = request.POST.get("fname")
+    #     lname = request.POST.get("lname")
+    #     gender = request.POST.get("gender")
+    #     school_name = request.POST.get("school_name")
+    #     idno = request.POST.get("idno")
+    #     email = request.POST.get("email")
+    #     mobile_number = request.POST.get("mobile_number")
+    #     #need to validate mobile number
+    #     if psw1 != psw2:
+    #         messages.warning(request, 'password mismatch')
+    #         context = {
+    #             'fname' : fname,
+    #             'lname' : lname,
+    #             'gender' : gender,
+    #             'school_name' : school_name,
+    #             'idno':idno,
+    #             'email':email
+    #         }
+    #         return render(request, "create-student-account.html",context)
+    #     else:
+    #         # print(fname,sname, gender, school_name, idno, email)
+    #         # return render(request, "create-student-account.html",context)
+    #         student = QPUser()
+    #         student.first_name = fname
+    #         student.last_name = lname
+    #         student.gender = gender
+    #         student.school_name = school_name
+    #         student.idno = idno
+    #         student.mobile_number = mobile_number
+    #         student.email = email
+    #         student.set_password(psw1)
+    #         student.is_student = True
+    #         student.is_teacher = False
+    #         student.username = email
+    #         student.date_joined = datetime.today()
+    #         student.save()
+    #         messages.success(request, 'You have been registered successfully')
     
-    return render(request, "create-student-account.html")
+    return render(request, "create-student-account.html", context)
  #need to add mobile number in teacheraccount   
 def createTeacherAccount(request):
-    if request.method == "POST":
-        psw1 = request.POST.get("psw1")
-        psw2 = request.POST.get("psw2")
-        fname = request.POST.get("fname")
-        lname = request.POST.get("lname")
-        gender = request.POST.get("gender")
-        school_name = request.POST.get("school_name")
-        idno = request.POST.get("idno")
-        email = request.POST.get("email")
-        if psw1 != psw2:
-            messages.warning(request, 'password mismatch')
-            context = {
-                'fname' : fname,
-                'lname' : lname,
-                'gender' : gender,
-                'school_name' : school_name,
-                'idno':idno,
-                'email':email
-            }
-            return render(request, "create-teacher-account.html",context)
-        else:
-            # print(fname,sname, gender, school_name, idno, email)
-            # return render(request, "create-student-account.html",context)
+    context ={} 
+    form = QCUserForm(request.POST) 
+    if request.method == "POST":  
+        if form.is_valid(): 
+            teacher = QCUserForm() 
             teacher = QPUser()
-            teacher.first_name = fname
-            teacher.last_name = lname
-            teacher.gender = gender
-            teacher.school_name = school_name
-            teacher.idno = idno
-            teacher.email = email
-            teacher.set_password(psw1)
-            teacher.username = email
-            teacher.date_joined = datetime.today()
+            teacher.first_name = form.cleaned_data['first_name']
+            teacher.last_name = form.cleaned_data['last_name']
+            teacher.gender = form.cleaned_data['gender']
+            teacher.school = form.cleaned_data['school']
+            teacher.idno = form.cleaned_data['idno']
+            teacher.mobile_number = form.cleaned_data['mobile_number']
+            teacher.email = form.cleaned_data['email']
+            teacher.set_password(form.cleaned_data['password'])
             teacher.is_student = False
             teacher.is_teacher = True
+            teacher.username = teacher.email
+            teacher.date_joined = datetime.today()
+            teacher.date_of_birth = form.cleaned_data['date_of_birth']
             teacher.save()
             messages.success(request, 'You have been registered successfully')
-    return render(request, "create-teacher-account.html")
+    context['form']= form 
+    # if request.method == "POST":
+    #     psw1 = request.POST.get("psw1")
+    #     psw2 = request.POST.get("psw2")
+    #     fname = request.POST.get("fname")
+    #     lname = request.POST.get("lname")
+    #     gender = request.POST.get("gender")
+    #     school_name = request.POST.get("school_name")
+    #     idno = request.POST.get("idno")
+    #     email = request.POST.get("email")
+    #     if psw1 != psw2:
+    #         messages.warning(request, 'password mismatch')
+    #         context = {
+    #             'fname' : fname,
+    #             'lname' : lname,
+    #             'gender' : gender,
+    #             'school_name' : school_name,
+    #             'idno':idno,
+    #             'email':email
+    #         }
+    #         return render(request, "create-teacher-account.html",context)
+    #     else:
+    #         # print(fname,sname, gender, school_name, idno, email)
+    #         # return render(request, "create-student-account.html",context)
+    #         teacher = QPUser()
+    #         teacher.first_name = fname
+    #         teacher.last_name = lname
+    #         teacher.gender = gender
+    #         teacher.school_name = school_name
+    #         teacher.idno = idno
+    #         teacher.email = email
+    #         teacher.set_password(psw1)
+    #         teacher.username = email
+    #         teacher.date_joined = datetime.today()
+    #         teacher.is_student = False
+    #         teacher.is_teacher = True
+    #         teacher.save()
+    #         messages.success(request, 'You have been registered successfully')
+    return render(request, "create-teacher-account.html",context)
     
 
 def aboutUs(request):
