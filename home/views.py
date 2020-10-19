@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
 from datetime import datetime
 from home.models import QPUser
+from django.core.mail import send_mail
+from django.conf import settings
 def index(request):
     return render(request, 'index.html')
 
@@ -118,6 +120,23 @@ def createTeacherAccount(request):
 def aboutUs(request):
     return render(request, "about-us.html")
 def contactUs(request):
+    if request.method == 'POST':
+        s_email = request.POST.get("sender_email")
+        s_name = request.POST.get("sender_name")
+        s_message = request.POST.get("message_sent")
+        # print(s_email, s_message, s_name)
+        send_mail(
+            subject= s_email+" "+s_name,
+            message= s_message,
+            from_email= settings.EMAIL_HOST_USER,
+            recipient_list=[settings.EMAIL_HOST_USER],
+        )
+        send_mail(
+            subject= "Acknowledgement for "+s_email+" "+s_name,
+            message= s_message,
+            from_email= settings.EMAIL_HOST_USER,
+            recipient_list=[s_email],
+        )
     return render(request, "contact-us.html")
 
 def userAccount(request):
@@ -145,6 +164,8 @@ def editUserAcc(request):
         return redirect("/user-account/")
         
     return render(request, "edit-user-account.html")
+
+
 
 
 
