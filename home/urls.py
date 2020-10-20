@@ -12,6 +12,7 @@ urlpatterns = [
     path('about-us/', views.aboutUs, name="aboutUs"),
     path('user-logout/', views.userLogout, name="userLogout"),
     path('user-dashboard/', views.userDashboard, name="userDashboard"),
-    path('edit-user-account/', views.editUserAcc, name="editUserAcc")
+    path('edit-user-account/', views.editUserAcc, name="editUserAcc"),
+    path('<single_slug>/', views.single_slug, name="single_slug"),
 
 ]

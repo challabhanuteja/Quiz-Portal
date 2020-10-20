@@ -190,7 +190,12 @@ def userAccount(request):
     return render(request, "user-account.html")
 
 def userDashboard(request):
-    return render(request, "user-dashboard.html")
+    try:
+        quizzes = Quiz.objects.filter(assigned_to = request.user.standard)
+        context = {"quizzes": quizzes}
+        return render(request, "user-dashboard.html", context)
+    except:
+        return render(request, "user-dashboard.html")
 
 def editUserAcc(request):
     if request.method == "POST":
@@ -211,6 +216,17 @@ def editUserAcc(request):
         return redirect("/user-account/")
         
     return render(request, "edit-user-account.html")
+
+def single_slug(request, single_slug):
+    temp_q = single_slug.split("-")
+    if temp_q[0] == 'quiz':
+        questions = MultipleChoiceQuestion.objects.filter(quiz = Quiz.objects.get(pk = int(temp_q[1])))
+        context = {"questions": questions}
+        if len(questions) != 0:
+            return render(request, "write_quiz.html", context)
+        else:
+            return HttpResponse("Quiz is not ready yet")
+    return HttpResponse("Quiz is not ready yet")
 
 
 
