@@ -13,6 +13,6 @@ urlpatterns = [
     path('user-logout/', views.userLogout, name="userLogout"),
     path('user-dashboard/', views.userDashboard, name="userDashboard"),
     path('edit-user-account/', views.editUserAcc, name="editUserAcc"),
+    path('create-new-quiz/', views.create_new_quiz, name = "create_new_quiz"),
     path('<single_slug>/', views.single_slug, name="single_slug"),
-
 ]

@@ -5,32 +5,34 @@
 {% block body %}
 <h1 class="d-flex justify-content-center">{{quiz.name}}</h1>
 <div class="container">
+    <form action="/quiz-{{quiz.pk}}/" method="post">
+    {% csrf_token %}
     {% for question in  questions%}
     <p>{{question.question_no}}) {{question.question}}</p>
     <div class = "ml-4 mt-1 mb-4">
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
+            <input class="form-check-input" type="radio" name="question-{{question.pk}}" id="exampleRadios1"
                 value="{{question.option1}}">
             <label class="form-check-label" for="exampleRadios1">
                 {{question.option1}}
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
+            <input class="form-check-input" type="radio" name="question-{{question.pk}}" id="exampleRadios2"
                 value="{{question.option2}}">
             <label class="form-check-label" for="exampleRadios2">
                 {{question.option2}}
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3"
+            <input class="form-check-input" type="radio" name="question-{{question.pk}}" id="exampleRadios3"
                 value="{{question.option3}}">
             <label class="form-check-label" for="exampleRadios3">
                 {{question.option3}}
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3"
+            <input class="form-check-input" type="radio" name="question-{{question.pk}}" id="exampleRadios3"
                 value="{{question.option4}}">
             <label class="form-check-label" for="exampleRadios3">
                 {{question.option4}}
@@ -40,6 +42,7 @@
     {% endfor %}
 
     <button type="submit" class = "btn btn-primary">Submit</button>
+    </form>
 </div>
 
 {% endblock body %}

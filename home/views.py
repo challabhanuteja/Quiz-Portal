@@ -6,7 +6,7 @@ from datetime import datetime
 from home.models import *
 from django.core.mail import send_mail
 from django.conf import settings
-from .forms import QCUserForm
+from .forms import *
 
 def index(request):
     return render(request, 'index.html')
@@ -40,7 +40,6 @@ def createStudentAccount(request):
     form = QCUserForm(request.POST) 
     if request.method == "POST":  
         if form.is_valid(): 
-            student = QCUserForm() 
             student = QPUser()
             student.first_name = form.cleaned_data['first_name']
             student.last_name = form.cleaned_data['last_name']
@@ -106,7 +105,6 @@ def createTeacherAccount(request):
     form = QCUserForm(request.POST) 
     if request.method == "POST":  
         if form.is_valid(): 
-            teacher = QCUserForm() 
             teacher = QPUser()
             teacher.first_name = form.cleaned_data['first_name']
             teacher.last_name = form.cleaned_data['last_name']
@@ -191,8 +189,14 @@ def userAccount(request):
 
 def userDashboard(request):
     try:
-        quizzes = Quiz.objects.filter(assigned_to = request.user.standard)
+        quizzes = {}
+        if request.user.is_student:
+            quizzes = Quiz.objects.filter(assigned_to = request.user.standard)
+        elif request.user.is_teacher:
+            quizzes = Quiz.objects.filter(created_by = request.user.pk)
         context = {"quizzes": quizzes}
+        if len(quizzes) == 0:
+            context["no_quizzes"] = True
         return render(request, "user-dashboard.html", context)
     except:
         return render(request, "user-dashboard.html")
@@ -219,14 +223,56 @@ def editUserAcc(request):
 
 def single_slug(request, single_slug):
     temp_q = single_slug.split("-")
-    if temp_q[0] == 'quiz':
-        questions = MultipleChoiceQuestion.objects.filter(quiz = Quiz.objects.get(pk = int(temp_q[1])))
-        context = {"questions": questions}
+    if request.method == "POST":
+        if temp_q[0] == 'quiz':
+            quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
+            questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1)
+            context = {"questions": questions, "quiz":quiz1}
+            score = 0
+            for question in questions:
+                if question.answer == request.POST.get("question-"+str(question.pk)):
+                    # print(question.answer, request.POST.get("question-"+str(question.pk)))
+                    score+=1
+            return HttpResponse("Score ="+str(score))
+
+    elif temp_q[0] == 'quiz':
+        quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
+        questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1).order_by("question_no")
+        
+        context = {"questions": questions, "quiz": quiz1}
         if len(questions) != 0:
             return render(request, "write_quiz.html", context)
         else:
             return HttpResponse("Quiz is not ready yet")
+
+    elif temp_q[0] == 'edit':
+        return HttpResponse("edit quiz")
+    
     return HttpResponse("Quiz is not ready yet")
+
+def create_new_quiz(request):
+    if request.method == "POST":
+        form = QuizForm(request.POST)
+        if form.is_valid():
+            temp_quiz = Quiz()
+            temp_quiz.created_by = request.user
+            temp_quiz.date_created = datetime.now
+            temp_quiz.start_time = form.cleaned_data["start_time"]
+            temp_quiz.assigned_to = form.cleaned_data["assigned_to"]
+            temp_quiz.name = form.cleaned_data["name"]
+            temp_quiz.quiz_description = form.cleaned_data["quiz_description"]
+            temp_quiz.duration = int(form.cleaned_data["duration"])
+            temp_quiz.save()
+            messages.success(request, "Quiz creted successfully. You can find it in your dashboard")
+            return redirect("/create-new-quiz/")
+        else:
+            messages.warning(request, "fill all the required details") 
+    else:
+        form   = QuizForm()
+    context = {"form":form}
+    return render(request, "create-new-quiz.html", context)
+
+
 
 
 

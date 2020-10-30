@@ -5,16 +5,28 @@ dashboard
 {% block body %}
 <h1 class="d-flex justify-content-center">Dashboard</h1>
 <div class="container">
-    {% for quiz in quizzes %}
-        <div class="card my-2" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">{{quiz.name}}</h5>
-                <p class="card-text">{{quiz.date_created}}</p>
-                <p class="card-text">{{quiz.quiz_description}}</p>
-                <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary">Start</a>
+        {% if user.is_teacher %}
+            <a href="/create-new-quiz" class="btn btn-primary">Create New Quiz</a>
+            {% if no_quizzes%}
+                <h2>You have not created any quizzes yet</h2>
+            {% endif %}
+        {% endif %}
+        {% for quiz in quizzes %}
+            <div class="card my-2" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{quiz.name}}</h5>
+                    <p class="card-text">{{quiz.date_created}}</p>
+                    <p class="card-text">{{quiz.quiz_description}}</p>
+                    {% if user.is_student %}
+                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary">Start</a>
+                    {% else %}
+                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary">Test the quiz</a>
+                    <a href="/edit-quiz-{{quiz.pk}}/" class="btn btn-primary">Edit the quiz</a>
+                    {% endif %}
+                    
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
 </div>
 
 {% endblock body %}

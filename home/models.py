@@ -41,18 +41,19 @@ class QPUser(AbstractUser):
             return "Admin"
 
 class Quiz(models.Model):
-    quiz_id = models.IntegerField(unique = True)
+    # quiz_id = models.IntegerField(unique = True)
     name = models.CharField(max_length=200)
     date_created = models.DateTimeField(auto_now=True)
     start_time = models.DateTimeField(default = datetime.now)
     quiz_description = models.CharField(max_length=200, default = "Description")
-    # end_time = models.DateTimeField(default = (date.today() + datetime.timedelta(days=365)))
+    # end_time = models.DateTimeField(default = datetime.date)
     duration = models.IntegerField()
     assigned_to = models.ForeignKey(Standard, verbose_name="Assigned to", on_delete=models.SET_DEFAULT, default = 1)
+    created_by  = models.ForeignKey(QPUser, verbose_name="Created by", on_delete=models.SET_DEFAULT, default = 1)
 
 class MultipleChoiceQuestion(models.Model):
     quiz = models.ForeignKey(Quiz, verbose_name="QuizId", on_delete=models.CASCADE)
-    question_no = models.IntegerField(unique=True)
+    question_no = models.IntegerField()
     question = models.TextField()
     option1 = models.CharField(max_length=100)
     option2 = models.CharField(max_length=100)
