@@ -20,8 +20,8 @@ dashboard
                     {% if user.is_student %}
                     <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary">Start</a>
                     {% else %}
-                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary">Test the quiz</a>
-                    <a href="/edit-quiz-{{quiz.pk}}/" class="btn btn-primary">Edit the quiz</a>
+                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary">Test Quiz</a>
+                    <a href="/add-questions-{{quiz.pk}}/" class="btn btn-primary">Add Questions</a>
                     {% endif %}
                     
                 </div>

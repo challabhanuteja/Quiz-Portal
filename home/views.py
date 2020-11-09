@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, Http404
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
@@ -7,6 +7,9 @@ from home.models import *
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import *
+import pandas as pd
+import os
+
 
 def index(request):
     return render(request, 'index.html')
@@ -220,7 +223,8 @@ def editUserAcc(request):
         return redirect("/user-account/")
         
     return render(request, "edit-user-account.html")
-
+def file_is_valid_mcq(x):
+    return True
 def single_slug(request, single_slug):
     temp_q = single_slug.split("-")
     if request.method == "POST":
@@ -234,6 +238,35 @@ def single_slug(request, single_slug):
                     # print(question.answer, request.POST.get("question-"+str(question.pk)))
                     score+=1
             return HttpResponse("Score ="+str(score))
+        elif temp_q[0] == 'add':
+            input_file = request.FILES["input_file"]
+            df = pd.read_excel(input_file, dtype=str)
+            if file_is_valid_mcq(df):
+                entries = MultipleChoiceQuestion.objects.filter(quiz_id = int(temp_q[2]))
+                entries.delete()
+                for i in range(len(df)):
+                    q_no = str(df.iloc[i,0])
+                    q_des = str(df.iloc[i,1])
+                    o1 = str(df.iloc[i,2])
+                    o2 = str(df.iloc[i,3])
+                    o2 = str(df.iloc[i,3])
+                    o3 = str(df.iloc[i,4])
+                    o4 = str(df.iloc[i,5])
+                    ans = str(df.iloc[i,6])
+                    question = MultipleChoiceQuestion()
+                    question.question_no = q_no
+                    question.question = q_des
+                    question.option1 = o1
+                    question.option2 = o2
+                    question.option3 = o3
+                    question.option4 = o4
+                    question.answer = ans
+                    question.quiz_id = int(temp_q[2])
+                    question.save()
+                messages.success(request, "Questions Uploaded Successfully")
+            else:
+                messages.warning(request, "Please upload a valid file according to the instructions given above")
+            return render(request, "add-questions.html", context = {"quiz_id" : temp_q[2]})
 
     elif temp_q[0] == 'quiz':
         quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
@@ -245,10 +278,23 @@ def single_slug(request, single_slug):
         else:
             return HttpResponse("Quiz is not ready yet")
 
-    elif temp_q[0] == 'edit':
-        return HttpResponse("edit quiz")
+    elif temp_q[0] == 'add':
+        context ={"quiz_id" : temp_q[2]}
+        return render(request, "add-questions.html", context = context)
     
     return HttpResponse("Quiz is not ready yet")
+
+# def mcq_file_format_download(request):
+#     return download(request, "media\mcq_xlsheet_format.xlsx")
+
+# def download(request,path):
+#     file_path=os.path.join(settings.MEDIA_ROOT,path)
+#     if os.path.exists(file_path):
+#         with open(file_path,'rb')as fh:
+#             response=HttpResponse(fh.read(),content_type="application/adminupload")
+#             response['Content-Disposition']='inline;filename='+os.path.basename(file_path)
+#             return response
+#     return HttpResponse("file not found")
 
 def create_new_quiz(request):
     if request.method == "POST":
