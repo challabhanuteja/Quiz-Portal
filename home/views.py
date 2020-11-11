@@ -10,7 +10,6 @@ from .forms import *
 import pandas as pd
 import os
 
-
 def index(request):
     return render(request, 'index.html')
 
@@ -223,7 +222,18 @@ def editUserAcc(request):
         return redirect("/user-account/")
         
     return render(request, "edit-user-account.html")
-def file_is_valid_mcq(x):
+def file_is_valid_mcq(input_file):
+    
+    file_name = input_file.name.split(".")
+    if file_name[1]!="xlsx": #checks the file format
+        return False
+    x = pd.read_excel(input_file, dtype=str)
+    if len(x.columns) != 7: # checks number of columns
+        return False
+    
+    elif(x.isnull().sum().sum()): # checks null values
+        return False
+
     return True
 def single_slug(request, single_slug):
     temp_q = single_slug.split("-")
@@ -240,10 +250,11 @@ def single_slug(request, single_slug):
             return HttpResponse("Score ="+str(score))
         elif temp_q[0] == 'add':
             input_file = request.FILES["input_file"]
-            df = pd.read_excel(input_file, dtype=str)
-            if file_is_valid_mcq(df):
+            
+            if file_is_valid_mcq(input_file):
                 entries = MultipleChoiceQuestion.objects.filter(quiz_id = int(temp_q[2]))
                 entries.delete()
+                df = pd.read_excel(input_file, dtype=str)
                 for i in range(len(df)):
                     q_no = str(df.iloc[i,0])
                     q_des = str(df.iloc[i,1])
@@ -272,7 +283,7 @@ def single_slug(request, single_slug):
         quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
         questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1).order_by("question_no")
         
-        context = {"questions": questions, "quiz": quiz1}
+        context = {"questions": questions, "quiz": quiz1, "duration": quiz1.duration}
         if len(questions) != 0:
             return render(request, "write_quiz.html", context)
         else:
