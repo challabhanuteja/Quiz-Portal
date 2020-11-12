@@ -8,8 +8,7 @@ user account
         <img src="/static/profile_pic.jpg" class="rounded mx-auto d-block">
         <a class="btn btn-primary mt-1" href="#" role="button">Change Profile Pic</a>
     </div>
-    <form method="post" action = "/edit-user-account/">
-    {% csrf_token %}
+    <form>
         <div class="form-group">
             <label for="formGroupExampleInput">First Name</label>
             <input type="text" class="form-control" id="formGroupExampleInput" name="fname" value={{user.first_name}} disabled = true>
@@ -61,6 +60,14 @@ user account
             <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value={{user.school.school_name}} disabled = true>
         </div>
         <div class="form-group">
+            <label for="formGroupExampleInput2">Standard Id</label>
+            <input type="text" class="form-control" id="formGroupExampleInput3" name = "standard_id" required value={{user.standard.pk}} disabled = true>
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">Section Id</label>
+            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value={{user.section.pk}} disabled = true>
+        </div>
+        <div class="form-group">
             <label for="formGroupExampleInput2">ID Number</label>
             <input type="text" class="form-control" id="formGroupExampleInput4" name = "idno" required value= {{user.idno}} disabled = true>
         </div>
@@ -84,10 +91,11 @@ user account
             <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "email" required value= {{user.email}} disabled = true>
             <small id="emailHelp" class="form-text text-muted" >We'll never share your email with anyone else.</small>
         </div>
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <button type="submit" class="btn btn-primary">Edit Details</button>
-        </div>
+        
     </form>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <a class="btn btn-primary" href= "/edit-user-account/">Edit Details</a>
+    </div>
     {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">

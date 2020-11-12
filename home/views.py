@@ -208,20 +208,26 @@ def editUserAcc(request):
         fname = request.POST.get("fname")
         lname = request.POST.get("lname")
         gender = request.POST.get("gender")
-        school_name = request.POST.get("school_name")
+        school = request.POST.get("school_id")
+        section = request.POST.get("section_id")
         idno = request.POST.get("idno")
         email = request.POST.get("email")
+        mobile_no = request.POST.get(" mobile_number")
+        standard_id = request.POST.get("standard_id")
         user= request.user
         user.first_name = fname
         user.last_name = lname
         user.gender = gender
-        user.school_name = school_name
+        user.school = School.objects.get(pk = int(school)) 
+        user.section = Section.objects.get(pk = int(section))
+        user.standard = Standard.objects.get(pk = int(standard_id)) 
         user.idno = idno
+        # user.mobile_number = mobile_no
         user.save()
         messages.success(request, "Your details are updated successfully")
         return redirect("/user-account/")
         
-    return render(request, "edit-user-account.html")
+    return render(request, "edit-user-account.html", context = {"user": request.user})
 def file_is_valid_mcq(input_file):
     
     file_name = input_file.name.split(".")
@@ -247,6 +253,12 @@ def single_slug(request, single_slug):
                 if question.answer == request.POST.get("question-"+str(question.pk)):
                     # print(question.answer, request.POST.get("question-"+str(question.pk)))
                     score+=1
+            stemp = Score()
+            stemp.quizid = quiz1
+            stemp.qpuser = request.user
+            stemp.score = score
+            stemp.max_score = len(questions)
+            stemp.save()
             return HttpResponse("Score ="+str(score))
         elif temp_q[0] == 'add':
             input_file = request.FILES["input_file"]
@@ -282,7 +294,6 @@ def single_slug(request, single_slug):
     elif temp_q[0] == 'quiz':
         quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
         questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1).order_by("question_no")
-        
         context = {"questions": questions, "quiz": quiz1, "duration": quiz1.duration}
         if len(questions) != 0:
             return render(request, "write_quiz.html", context)

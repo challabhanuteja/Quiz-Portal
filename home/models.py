@@ -61,12 +61,11 @@ class MultipleChoiceQuestion(models.Model):
     option4 = models.CharField(max_length=100)
     answer = models.CharField(max_length = 100)
 
-# class FilesAdmin(models.Model):
-# 	adminupload=models.FileField(upload_to='media')
-# 	title=models.CharField(max_length=50)
-# 	def __str__(self):
-# 		return self.title
-
+class Score(models.Model):
+    qpuser = models.ForeignKey(QPUser, verbose_name="QPUser", on_delete=models.CASCADE)
+    quizid = models.ForeignKey(Quiz, verbose_name="QuizId", on_delete=models.CASCADE)
+    score = models.IntegerField()
+    max_score = models.IntegerField()
 
 
 

@@ -18,7 +18,7 @@ user account
             <label for="formGroupExampleInput2">Last Name</label>
             <input type="text" class="form-control" id="formGroupExampleInput2" name = "lname" required value={{user.last_name}}  >
         </div>
-        <div class="form-group" value={{gender}}>
+        <div class="form-group" value={{user.gender}}>
             <label for="formGroupExampleInput2">Gender</label>
             <div class="form-check">
                 {%if user.gender == 'Male'%}
@@ -57,8 +57,16 @@ user account
             </div>
         </div>
         <div class="form-group">
-            <label for="formGroupExampleInput2">School Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value={{user.school_name}} >
+            <label for="formGroupExampleInput2">School Id</label>
+            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_id" required value={{user.school.pk}} >
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">Standard Id</label>
+            <input type="text" class="form-control" id="formGroupExampleInput3" name = "standard_id" required value={{user.standard.pk}} >
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">Section Id</label>
+            <input type="text" class="form-control" id="formGroupExampleInput3" name = "section_id" required value={{user.section.pk}} >
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">ID Number</label>
@@ -77,7 +85,7 @@ user account
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Mobile Number</label>
-            <input type="text" class="form-control" id="formGroupExampleInput5" name = "mobile_number" required value= {{user.mobile_number}} >
+            <input type="text" class="form-control" id="formGroupExampleInput5" name = "mobile_number" required value= {{user.mobile_number}} disabled = true>
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
@@ -85,7 +93,7 @@ user account
             <small id="emailHelp" class="form-text text-muted" >We'll never share your email with anyone else.</small>
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center">
-            <button type="submit" class="btn btn-primary">Edit Details</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </form>
     {% if messages %}
