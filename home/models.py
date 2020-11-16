@@ -41,12 +41,11 @@ class QPUser(AbstractUser):
             return "Admin"
 
 class Quiz(models.Model):
-    # quiz_id = models.IntegerField(unique = True)
     name = models.CharField(max_length=200)
     date_created = models.DateTimeField(auto_now=True)
     start_time = models.DateTimeField(default = datetime.now)
     quiz_description = models.CharField(max_length=200, default = "Description")
-    # end_time = models.DateTimeField(default = datetime.date)
+    end_time = models.DateTimeField(default = datetime.now)
     duration = models.IntegerField()
     assigned_to = models.ForeignKey(Standard, verbose_name="Assigned to", on_delete=models.SET_DEFAULT, default = 1)
     created_by  = models.ForeignKey(QPUser, verbose_name="Created by", on_delete=models.SET_DEFAULT, default = 1)

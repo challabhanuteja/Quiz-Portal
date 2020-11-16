@@ -335,6 +335,9 @@ def single_slug(request, single_slug):
         req_scores = Score.objects.filter(quizid = Quiz.objects.get(pk = temp_q[3]))
         context ={"scores" : req_scores}
         return view_quiz_score(request, context)
+    elif temp_q[0]=="edit" and temp_q[1]=="quiz":
+        context = {"quiz" : Quiz.objects.get(pk = temp_q[2])}
+        return render(request, "edit_quiz.html", context)
     return HttpResponse("Quiz is not ready yet")
 
 def view_quiz_score(request, context):

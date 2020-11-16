@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}
+Edit Quiz
+{% endblock title %}
+{% block body %}
+<div class="content my-5 d-flex flex-column justify-content-center align-items-center">
+    <h1>Edit Quiz</h1>
+    <div class="container flex-column justify-content-center align-items-center">
+        <div class="form-group row w-100 mt-5">
+            <label for="quiz-name" class="col-2 col-form-label"><strong>Quiz Name</strong></label>
+            <div class="col-10">
+              <input class="form-control" type="text" value="{{quiz.name}}" id="quiz-name" name="quiz-name">
+            </div>
+        </div>
+        
+        <div class="form-group mt-2">
+            <label for="exampleTextarea"><strong>Quiz Description</strong></label>
+            <textarea class="form-control" id="exampleTextarea" rows="3">{{quiz.quiz_description}}</textarea>
+        </div>
+        <div class="form-group row mt-2">
+            <label for="example-datetime-local-input1" class="col-2 col-form-label"><strong>Start Time</strong></label>
+            <div class="col-10">
+              <input class="form-control" type="datetime-local" value="{{quiz.start_time}}" id="example-datetime-local-input1" name = "start_time">
+            </div>
+        </div>
+        <div class="form-group row mt-2">
+            <label for="example-datetime-local-input2" class="col-2 col-form-label"><strong>End Time</strong></label>
+            <div class="col-10">
+              <input class="form-control" type="datetime-local" value="{{quiz.end_time}}" id="example-datetime-local-input2" name = "start_time">
+            </div>
+        </div>
+        
+        <div class="form-group row mt-2">
+        <label class="mr-sm-2" for="inlineFormCustomSelect"><strong>Assign to</strong></label>
+        <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+            <option selected>Choose...</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
+        </div>
+    </div>  
+    <button type="submit mt-5" class = "btn btn-primary">Submit</button>
+    
+</div>
+
+{% endblock body %}
