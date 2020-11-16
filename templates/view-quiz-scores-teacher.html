@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}
+view quiz questions
+{% endblock title %}
+{% block body %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">ID No</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for score in scores %}
+        <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{score.qpuser.idno}}</td>
+        <td>{{score.qpuser.first_name}} {{score.qpuser.last_name}}</td>
+        <td>{{score.qpuser.email}}</td>
+        <td>{{score.score}} / {{score.max_score}} </td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock body %}

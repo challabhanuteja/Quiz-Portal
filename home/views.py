@@ -234,10 +234,10 @@ def file_is_valid_mcq(input_file):
     if file_name[1]!="xlsx": #checks the file format
         return False
     x = pd.read_excel(input_file, dtype=str)
-    if len(x.columns) != 7: # checks number of columns
+    if len(x.columns) != 8: # checks number of columns
         return False
     
-    elif(x.isnull().sum().sum()): # checks null values
+    elif(x.iloc[:,6].isnull().sum() != 0): # checks null values
         return False
 
     return True
@@ -250,16 +250,38 @@ def single_slug(request, single_slug):
             context = {"questions": questions, "quiz":quiz1}
             score = 0
             for question in questions:
-                if question.answer == request.POST.get("question-"+str(question.pk)):
-                    # print(question.answer, request.POST.get("question-"+str(question.pk)))
-                    score+=1
-            stemp = Score()
-            stemp.quizid = quiz1
-            stemp.qpuser = request.user
-            stemp.score = score
-            stemp.max_score = len(questions)
-            stemp.save()
-            return HttpResponse("Score ="+str(score))
+                if question.is_multiple_ans == "N":
+                    if question.answer == request.POST.get("question-"+str(question.pk)):
+                        # print(question.answer, request.POST.get("question-"+str(question.pk)))
+                        score+=1
+                else:
+                    answers_written = []
+                    if request.POST.get("question-"+str(question.pk)+"-ans-1", None)!=None:
+                        answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-1", None))
+                    if request.POST.get("question-"+str(question.pk)+"-ans-2", None)!=None:
+                        answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-2", None))
+                    if request.POST.get("question-"+str(question.pk)+"-ans-3", None)!=None:
+                        answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-3", None))
+                    if request.POST.get("question-"+str(question.pk)+"-ans-4", None)!=None:
+                        answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-4", None))
+                    real_answers = question.answer
+                    real_answers = [x for x in real_answers.split(" ~ ")]
+                    answers_correct = list(set(real_answers) & set(answers_written))
+                    score += len(answers_correct)/len(real_answers)
+
+            try:
+                stemp = Score.objects.get(qpuser = request.user)
+                if stemp.score< score:
+                    stemp.score = score
+                    stemp.save()
+            except:
+                stemp = Score()
+                stemp.quizid = quiz1
+                stemp.qpuser = request.user
+                stemp.score = score
+                stemp.max_score = len(questions)
+                stemp.save()
+            return render(request,"show-student-score.html", context = {"score": score, "max_score": len(questions)})
         elif temp_q[0] == 'add':
             input_file = request.FILES["input_file"]
             
@@ -276,6 +298,7 @@ def single_slug(request, single_slug):
                     o3 = str(df.iloc[i,4])
                     o4 = str(df.iloc[i,5])
                     ans = str(df.iloc[i,6])
+                    is_multi_ans = str(df.iloc[i,7])
                     question = MultipleChoiceQuestion()
                     question.question_no = q_no
                     question.question = q_des
@@ -285,6 +308,10 @@ def single_slug(request, single_slug):
                     question.option4 = o4
                     question.answer = ans
                     question.quiz_id = int(temp_q[2])
+                    if is_multi_ans == "nan" or is_multi_ans == "N":
+                        question.is_multiple_ans = "N"
+                    else:
+                        question.is_multiple_ans = "Y"
                     question.save()
                 messages.success(request, "Questions Uploaded Successfully")
             else:
@@ -303,20 +330,17 @@ def single_slug(request, single_slug):
     elif temp_q[0] == 'add':
         context ={"quiz_id" : temp_q[2]}
         return render(request, "add-questions.html", context = context)
-    
+    elif temp_q[0] == "view" and temp_q[1] == "quiz" and temp_q[2] == "scores":
+        #getting the required scores from the database
+        req_scores = Score.objects.filter(quizid = Quiz.objects.get(pk = temp_q[3]))
+        context ={"scores" : req_scores}
+        return view_quiz_score(request, context)
     return HttpResponse("Quiz is not ready yet")
 
-# def mcq_file_format_download(request):
-#     return download(request, "media\mcq_xlsheet_format.xlsx")
+def view_quiz_score(request, context):
+    if request.user.is_teacher:
 
-# def download(request,path):
-#     file_path=os.path.join(settings.MEDIA_ROOT,path)
-#     if os.path.exists(file_path):
-#         with open(file_path,'rb')as fh:
-#             response=HttpResponse(fh.read(),content_type="application/adminupload")
-#             response['Content-Disposition']='inline;filename='+os.path.basename(file_path)
-#             return response
-#     return HttpResponse("file not found")
+        return render(request, "view-quiz-scores-teacher.html", context = context)
 
 def create_new_quiz(request):
     if request.method == "POST":

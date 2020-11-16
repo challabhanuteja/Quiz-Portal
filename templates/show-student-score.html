@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}
+view test scores
+{% endblock title %}
+{% block body %}
+<div class="content mt-5">
+    <h1>You score is {{score}}/{{max_score}}</h1>
+    <a href="/user-dashboard">Go back</a>
+</div>
+
+{% endblock body %}

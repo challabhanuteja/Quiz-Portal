@@ -60,6 +60,7 @@ class MultipleChoiceQuestion(models.Model):
     option3 = models.CharField(max_length=100)
     option4 = models.CharField(max_length=100)
     answer = models.CharField(max_length = 100)
+    is_multiple_ans = models.CharField(max_length=1, default = "N")
 
 class Score(models.Model):
     qpuser = models.ForeignKey(QPUser, verbose_name="QPUser", on_delete=models.CASCADE)

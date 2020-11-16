@@ -18,12 +18,13 @@ dashboard
                     <p class="card-text">{{quiz.date_created}}</p>
                     <p class="card-text">{{quiz.quiz_description}}</p>
                     {% if user.is_student %}
-                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary">Start</a>
+                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Start</a>
                     {% else %}
-                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary">Test Quiz</a>
-                    <a href="/add-questions-{{quiz.pk}}/" class="btn btn-primary">Add Questions</a>
+                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Test Quiz</a>
+                    <a href="/add-questions-{{quiz.pk}}/" class="btn btn-primary mt-1">Add Questions</a>
+                    <a href="/view-quiz-scores-{{quiz.pk}}/" class="btn btn-primary mt-1">View quiz scores</a>
                     {% endif %}
-                    
+                    <a href="#" class="btn btn-primary mt-1">Edit quiz details</a>
                 </div>
             </div>
         {% endfor %}
