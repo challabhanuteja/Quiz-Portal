@@ -36,131 +36,59 @@ def createNewAccount(request):
     return render(request, "create-new-account.html")
     
 def createStudentAccount(request):
-    context ={} 
-  
-    # create object of form 
-    form = QCUserForm(request.POST) 
-    if request.method == "POST":  
-        if form.is_valid(): 
-            student = QPUser()
-            student.first_name = form.cleaned_data['first_name']
-            student.last_name = form.cleaned_data['last_name']
-            student.gender = form.cleaned_data['gender']
-            student.school = form.cleaned_data['school']
-            student.idno = form.cleaned_data['idno']
-            student.mobile_number = form.cleaned_data['mobile_number']
-            student.email = form.cleaned_data['email']
-            student.set_password(form.cleaned_data['password'])
-            student.is_student = True
-            student.is_teacher = False
-            student.username = student.email
-            student.date_joined = datetime.today()
-            student.date_of_birth = form.cleaned_data['date_of_birth']
-            student.save()
-            messages.success(request, 'You have been registered successfully')
-    context['form']= form 
-    # if request.method == "POST":
-    #     psw1 = request.POST.get("psw1")
-    #     psw2 = request.POST.get("psw2")
-    #     fname = request.POST.get("fname")
-    #     lname = request.POST.get("lname")
-    #     gender = request.POST.get("gender")
-    #     school_name = request.POST.get("school_name")
-    #     idno = request.POST.get("idno")
-    #     email = request.POST.get("email")
-    #     mobile_number = request.POST.get("mobile_number")
-    #     #need to validate mobile number
-    #     if psw1 != psw2:
-    #         messages.warning(request, 'password mismatch')
-    #         context = {
-    #             'fname' : fname,
-    #             'lname' : lname,
-    #             'gender' : gender,
-    #             'school_name' : school_name,
-    #             'idno':idno,
-    #             'email':email
-    #         }
-    #         return render(request, "create-student-account.html",context)
-    #     else:
-    #         # print(fname,sname, gender, school_name, idno, email)
-    #         # return render(request, "create-student-account.html",context)
-    #         student = QPUser()
-    #         student.first_name = fname
-    #         student.last_name = lname
-    #         student.gender = gender
-    #         student.school_name = school_name
-    #         student.idno = idno
-    #         student.mobile_number = mobile_number
-    #         student.email = email
-    #         student.set_password(psw1)
-    #         student.is_student = True
-    #         student.is_teacher = False
-    #         student.username = email
-    #         student.date_joined = datetime.today()
-    #         student.save()
-    #         messages.success(request, 'You have been registered successfully')
-    
+    context ={}
+    context["schools"] = School.objects.all()
+
+    if request.method == "POST":
+        student = QPUser()
+        student.first_name = request.POST.get("fname")
+        student.last_name = request.POST.get("lname")
+        student.gender = request.POST.get("gender")
+        student.date_of_birth = request.POST.get("dob")
+        school1 = School.objects.get(pk = int(request.POST.get("school")))
+        student.school = school1
+        standard1 = Standard.objects.filter(school = school1)[0]
+        student.standard = standard1
+        # print(Section.objects.filter(standard = standard1))
+        student.section = Section.objects.filter(standard = standard1)[0]
+        student.idno = request.POST.get("idno")
+        student.mobile_number = request.POST.get("mobile_number")
+        student.email = request.POST.get("email")
+        student.set_password(request.POST.get('psw1'))
+        student.is_student = True
+        student.is_teacher = False
+        student.username = request.POST.get("email")
+        student.date_joined = datetime.today()
+        student.save()
+        messages.success(request, 'You have been registered successfully')
     return render(request, "create-student-account.html", context)
  #need to add mobile number in teacheraccount   
 def createTeacherAccount(request):
-    context ={} 
-    form = QCUserForm(request.POST) 
-    if request.method == "POST":  
-        if form.is_valid(): 
-            teacher = QPUser()
-            teacher.first_name = form.cleaned_data['first_name']
-            teacher.last_name = form.cleaned_data['last_name']
-            teacher.gender = form.cleaned_data['gender']
-            teacher.school = form.cleaned_data['school']
-            teacher.idno = form.cleaned_data['idno']
-            teacher.mobile_number = form.cleaned_data['mobile_number']
-            teacher.email = form.cleaned_data['email']
-            teacher.set_password(form.cleaned_data['password'])
-            teacher.is_student = False
-            teacher.is_teacher = True
-            teacher.username = teacher.email
-            teacher.date_joined = datetime.today()
-            teacher.date_of_birth = form.cleaned_data['date_of_birth']
-            teacher.save()
-            messages.success(request, 'You have been registered successfully')
-    context['form']= form 
-    # if request.method == "POST":
-    #     psw1 = request.POST.get("psw1")
-    #     psw2 = request.POST.get("psw2")
-    #     fname = request.POST.get("fname")
-    #     lname = request.POST.get("lname")
-    #     gender = request.POST.get("gender")
-    #     school_name = request.POST.get("school_name")
-    #     idno = request.POST.get("idno")
-    #     email = request.POST.get("email")
-    #     if psw1 != psw2:
-    #         messages.warning(request, 'password mismatch')
-    #         context = {
-    #             'fname' : fname,
-    #             'lname' : lname,
-    #             'gender' : gender,
-    #             'school_name' : school_name,
-    #             'idno':idno,
-    #             'email':email
-    #         }
-    #         return render(request, "create-teacher-account.html",context)
-    #     else:
-    #         # print(fname,sname, gender, school_name, idno, email)
-    #         # return render(request, "create-student-account.html",context)
-    #         teacher = QPUser()
-    #         teacher.first_name = fname
-    #         teacher.last_name = lname
-    #         teacher.gender = gender
-    #         teacher.school_name = school_name
-    #         teacher.idno = idno
-    #         teacher.email = email
-    #         teacher.set_password(psw1)
-    #         teacher.username = email
-    #         teacher.date_joined = datetime.today()
-    #         teacher.is_student = False
-    #         teacher.is_teacher = True
-    #         teacher.save()
-    #         messages.success(request, 'You have been registered successfully')
+    context ={}
+    context["schools"] = School.objects.all()
+
+    if request.method == "POST":
+        teacher = QPUser()
+        teacher.first_name = request.POST.get("fname")
+        teacher.last_name = request.POST.get("lname")
+        teacher.gender = request.POST.get("gender")
+        teacher.date_of_birth = request.POST.get("dob")
+        school1 = School.objects.get(pk = int(request.POST.get("school")))
+        teacher.school = school1
+        standard1 = Standard.objects.filter(school = school1)[0]
+        teacher.standard = standard1
+        # print(Section.objects.filter(standard = standard1))
+        teacher.section = Section.objects.filter(standard = standard1)[0]
+        teacher.idno = request.POST.get("idno")
+        teacher.mobile_number = request.POST.get("mobile_number")
+        teacher.email = request.POST.get("email")
+        teacher.set_password(request.POST.get('psw1'))
+        teacher.is_teacher = True
+        teacher.is_student = False
+        teacher.username = request.POST.get("email")
+        teacher.date_joined = datetime.today()
+        teacher.save()
+        messages.success(request, 'You have been registered successfully')
     return render(request, "create-teacher-account.html",context)
     
 
@@ -317,7 +245,27 @@ def single_slug(request, single_slug):
             else:
                 messages.warning(request, "Please upload a valid file according to the instructions given above")
             return render(request, "add-questions.html", context = {"quiz_id" : temp_q[2]})
-
+        elif temp_q[0]=="edit" and temp_q[1]=="quiz":
+            quiz_obj = Quiz.objects.get(pk = temp_q[2])
+            quiz_obj.name = request.POST.get("quiz-name")
+            quiz_obj.quiz_description = request.POST.get("quiz_description")
+            quiz_obj.assigned_to = Standard.objects.get(pk = request.POST.get("assigned_to"))
+            x = request.POST.get("start_time").split("-")
+            y = x[2].split("T")
+            z = y[1].split(":")
+            # print(x[0], x[1], y[0], z[0], z[1])
+            st = datetime(int(x[0]), int(x[1]), int(y[0]), int(z[0]), int(z[1]), 0, 0)
+            x = request.POST.get("end_time").split("-")
+            y = x[2].split("T")
+            z = y[1].split(":")
+            # print(x[0], x[1], y[0], z[0], z[1])
+            et = datetime(int(x[0]), int(x[1]), int(y[0]), int(z[0]), int(z[1]), 0, 0)
+            quiz_obj.start_time =  st
+            quiz_obj.end_time =  et
+            quiz_obj.duration = request.POST.get("duration")
+            quiz_obj.save()
+            messages.success(request, "Quiz Details Updated Successfully")
+            return render(request, "edit_quiz.html")
     elif temp_q[0] == 'quiz':
         quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
         questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1).order_by("question_no")
@@ -336,9 +284,22 @@ def single_slug(request, single_slug):
         context ={"scores" : req_scores}
         return view_quiz_score(request, context)
     elif temp_q[0]=="edit" and temp_q[1]=="quiz":
-        context = {"quiz" : Quiz.objects.get(pk = temp_q[2])}
+        quiz_obj = Quiz.objects.get(pk = temp_q[2])
+        context = {"quiz" : quiz_obj}
+        context["standards"] = Standard.objects.filter(school = request.user.school)
+        context["start_time"] = get_bootstrap_format(quiz_obj.start_time)
+        context["end_time"] = get_bootstrap_format(quiz_obj.end_time)
         return render(request, "edit_quiz.html", context)
+
+    elif temp_q[0] == "delete" and temp_q[1] == "quiz":
+        entry= Quiz.objects.get(pk = int(temp_q[2]))
+        entry.delete()
+        return render(request, "delete-quiz.html")
     return HttpResponse("Quiz is not ready yet")
+
+def get_bootstrap_format(x):
+    y = str(x.year)+"-"+x.strftime("%m")+"-"+x.strftime("%d")+"T"+x.strftime("%H")+":"+x.strftime("%M")
+    return y
 
 def view_quiz_score(request, context):
     if request.user.is_teacher:
@@ -346,25 +307,36 @@ def view_quiz_score(request, context):
         return render(request, "view-quiz-scores-teacher.html", context = context)
 
 def create_new_quiz(request):
+    context = dict()
+    context["standards"] = Standard.objects.filter(school = request.user.school)
     if request.method == "POST":
-        form = QuizForm(request.POST)
-        if form.is_valid():
-            temp_quiz = Quiz()
-            temp_quiz.created_by = request.user
-            temp_quiz.date_created = datetime.now
-            temp_quiz.start_time = form.cleaned_data["start_time"]
-            temp_quiz.assigned_to = form.cleaned_data["assigned_to"]
-            temp_quiz.name = form.cleaned_data["name"]
-            temp_quiz.quiz_description = form.cleaned_data["quiz_description"]
-            temp_quiz.duration = int(form.cleaned_data["duration"])
-            temp_quiz.save()
-            messages.success(request, "Quiz creted successfully. You can find it in your dashboard")
-            return redirect("/create-new-quiz/")
+        quiz_obj = Quiz()
+        q_name = request.POST.get("quiz-name")
+        q_des = request.POST.get("quiz_description")
+        x = request.POST.get("start_time").split("-")
+        y = x[2].split("T")
+        z = y[1].split(":")
+        # print(x[0], x[1], y[0], z[0], z[1])
+        q_st = datetime(int(x[0]), int(x[1]), int(y[0]), int(z[0]), int(z[1]), 0, 0)
+        x = request.POST.get("end_time").split("-")
+        y = x[2].split("T")
+        z = y[1].split(":")
+        # print(x[0], x[1], y[0], z[0], z[1])
+        q_et = datetime(int(x[0]), int(x[1]), int(y[0]), int(z[0]), int(z[1]), 0, 0)
+        quiz_obj.start_time =  q_st
+        quiz_obj.end_time =  q_et
+        q_duration = request.POST.get("duration")
+        quiz_obj.assigned_to = Standard.objects.get(pk = request.POST.get("assigned_to"))
+        if q_duration.isdigit():
+            quiz_obj.name = q_name
+            quiz_obj.quiz_description = q_des
+            quiz_obj.duration = int(q_duration)
+            quiz_obj.date_created = date.today()
+            quiz_obj.created_by = request.user
+            quiz_obj.save()
+            messages.success(request, "Quiz Created Successfully")
         else:
-            messages.warning(request, "fill all the required details") 
-    else:
-        form   = QuizForm()
-    context = {"form":form}
+            messages.warning(request, "fill all the required details correctly") 
     return render(request, "create-new-quiz.html", context)
 
 

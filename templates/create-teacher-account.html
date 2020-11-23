@@ -5,19 +5,19 @@ create teacher account
 {% endblock title %}
 
 {% block body %}
-<!-- <div class="container my-4">
+<div class="container my-4">
     <form method="post" action = "/create-teacher-account/">
     {% csrf_token %}
         <div class="form-group">
-            <label for="formGroupExampleInput">First Name</label>
+            <label for="formGroupExampleInput">First Name*</label>
             <input type="text" class="form-control" id="formGroupExampleInput" name="fname" required value={{fname}} >
         </div>
         <div class="form-group">
-            <label for="formGroupExampleInput2">Last Name</label>
+            <label for="formGroupExampleInput2">Last Name*</label>
             <input type="text" class="form-control" id="formGroupExampleInput2" name = "lname" required value={{lname}} >
         </div>
         <div class="form-group" value={{gender}}>
-            <label for="formGroupExampleInput2">Gender</label>
+            <label for="formGroupExampleInput2">Gender*</label>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" value="Male"
                     checked>
@@ -36,6 +36,7 @@ create teacher account
                     Female
                 </label>
             </div>
+
             <div class="form-check">
                 {% if gender == 'Others' %}
                 <input class="form-check-input" type="radio" name="gender" id="exampleRadios3" value="Others" checked>
@@ -47,30 +48,42 @@ create teacher account
                 </label>
             </div>
         </div>
+
         <div class="form-group">
-            <label for="formGroupExampleInput2">School Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value = {{school_name}}>
+            <label for="example-date-input" class=" col-form-label">Date of birth*</label>
+            <input class="form-control w-25" type="date" value="" id="example-date-input" name = "dob" required>  
         </div>
+
         <div class="form-group">
-            <label for="formGroupExampleInput2">ID Number</label>
-            <input type="text" class="form-control" id="formGroupExampleInput4" name = "idno" required value= {{idno}} >
+            <label class="mr-sm-2" for="school">School*</label>
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="school" name = "school" required>
+                {% for school in schools %}
+                    <option value="{{school.pk}}">{{school.school_name}}</option>
+                {% endfor %}
+                
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="formGroupExampleInput2">ID Number*</label>
+            <input type="text" class="form-control" id="idno" name = "idno" required  onchange = "checkID()">
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Mobile Number</label>
-            <input type="text" class="form-control" id="formGroupExampleInput5" name = "mobile_number" required value= {{mobile_number}} >
+            <input type="text" class="form-control" id="mobile_no" name = "mobile_number" required onchange = "checkMobileNo()">
         </div>
         <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "email" required value= {{email}} >
+            <label for="exampleInputEmail1">Email address*</label>
+            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name = "email" required onchange = "checkEmail()" >
             <small id="emailHelp" class="form-text text-muted" >We'll never share your email with anyone else.</small>
         </div>
         <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" required name = "psw1">
+            <label for="exampleInputPassword1">Password*</label>
+            <input type="password" class="form-control" id="psw1" required name = "psw1" onchange="validatePassword()">
         </div>
         <div class="form-group">
-            <label for="exampleInputPassword1">Re-enter Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" required name = "psw2">
+            <label for="exampleInputPassword1">Re-enter Password*</label>
+            <input type="password" class="form-control" id="psw2" required name = "psw2" onchange="checkPasswords()">
         </div>
         {% if messages %}
             {% for message in messages %}
@@ -83,12 +96,11 @@ create teacher account
             {% endfor %}
         {% endif %}
         <button type="submit" class="btn btn-primary">Submit</button>
-    </form> -->
-    <div class="container my-4">
-        <form action="/create-teacher-account/" method="post">
-            {% csrf_token %}
-            {{form.as_p}}
-            {% if messages %}
+    </form>
+    <!-- <form action="/create-student-account/" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
             <strong>{{message}}</strong>
@@ -99,9 +111,63 @@ create teacher account
             {% endfor %}
         {% endif %}
         <button type="submit">Submit</button>
-        </form>
-        
-    </div>
-    
+    </form> -->
 </div>
+<script>
+function checkID()
+{
+    let x = document.getElementById("idno").value;
+    if(/^\d+$/.test(x) == false)
+    {
+        alert("please enter correct id no");
+        document.getElementById("idno").value = "";
+    }
+    
+}
+function checkMobileNo()
+{
+    let x = document.getElementById("mobile_no").value;
+    // console.log(x.length)
+    if(/^\d+$/.test(x) == false || x.length != 10)
+    {
+        alert("please enter correct Mobile Number");
+        document.getElementById("mobile_no").value = "";
+    }
+    
+}
+function checkPasswords()
+{
+    let x = document.getElementById("psw1").value;
+    let y = document.getElementById("psw2").value;
+    if(x!=y)
+    {
+        alert("Passwords did not matched");
+        document.getElementById("psw1").value = "";
+        document.getElementById("psw2").value = "";
+    }
+}
+function checkEmail(mail) 
+{
+ if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(document.getElementById("email").value))
+  {
+    alert("You have entered an invalid email address!");
+    document.getElementById("email").value = "";
+  }
+}
+
+function validatePassword() {
+    var newPassword = document.getElementById('psw1').value;
+    var minNumberofChars = 6;
+    var maxNumberofChars = 16;
+    var regularExpression = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/; 
+    if(newPassword.length < minNumberofChars || newPassword.length > maxNumberofChars){
+        alert("Password should have minimum 6 and maximum 16 characters")
+        document.getElementById("psw1").value = "";
+    }
+    if(!regularExpression.test(newPassword)) {
+        alert("password should contain atleast one number and one special character");
+        document.getElementById("psw1").value = "";
+    }
+}
+</script>
 {% endblock body %}

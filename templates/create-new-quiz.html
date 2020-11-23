@@ -1,24 +1,63 @@
 {% extends 'base.html' %}
 {% block title %}
-create new quiz
+Create New Quiz
 {% endblock title %}
 {% block body %}
-    <div class="container mt-4">
-        <form action="/create-new-quiz/" method="post">
-            {% csrf_token %}
-            {{form.as_p}}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-                <strong>{{message}}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                {% endfor %}
-            {% endif %}
-            <button type="submit">Submit</button>
-        </form>
+<div class="content my-5 d-flex flex-column justify-content-center align-items-center">
+    <h1>Create Quiz</h1>
+    <form class="container flex-column justify-content-center align-items-center" form action="/create-new-quiz/" method="post">
+        {% csrf_token %}
+        <div class="form-group row w-100 mt-5">
+            <label for="quiz-name" class="col-2 col-form-label"><strong>Quiz Name</strong></label>
+            <div class="col-10">
+              <input class="form-control" type="text" id="quiz-name" name="quiz-name" required>
+            </div>
+        </div>
         
-    </div>
+        <div class="form-group mt-2">
+            <label for="exampleTextarea"><strong>Quiz Description</strong></label>
+            <textarea class="form-control" id="exampleTextarea" rows="3" name = "quiz_description" required></textarea>
+        </div>
+        <div class="form-group row mt-2">
+            <label for="example-datetime-local-input1" class="col-2 col-form-label"><strong>Start Time</strong></label>
+            <div class="col-10">
+              <input class="form-control" type="datetime-local" id="example-datetime-local-input1" name = "start_time" required>
+            </div>
+        </div>
+        <div class="form-group row mt-2">
+            <label for="example-datetime-local-input2" class="col-2 col-form-label"><strong>End Time</strong></label>
+            <div class="col-10">
+              <input class="form-control" type="datetime-local" 
+              id="example-datetime-local-input2" name = "end_time" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput">Duration (in mins)</label>
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Duration in mins" name = "duration">
+        </div>
+        <div class="form-group row mt-2">
+        <label class="mr-sm-2" for="inlineFormCustomSelect"><strong>Assign to</strong></label>
+        <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect" name = "assigned_to" required>
+            {% for standard in standards %}
+                <option value="{{standard.pk}}">{{standard.standard_name}}</option>
+            {% endfor %}
+            
+        </select>
+        </div>
+        <button type="submit mt-5" class = "btn btn-primary">Submit</button>
+    </form>  
+    
+    {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            <strong>{{message}}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            {% endfor %}
+    {% endif %}
+    
+</div>
+
 {% endblock body %}
