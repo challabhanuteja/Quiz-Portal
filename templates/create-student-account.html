@@ -51,12 +51,12 @@ create student account
 
         <div class="form-group">
             <label for="example-date-input" class=" col-form-label">Date of birth*</label>
-            <input class="form-control w-25" type="date" value="" id="example-date-input" name = "dob" required>  
+            <input class="form-control w-25" type="date" id="example-date-input" name = "dob" required value="{{dob}}">  
         </div>
 
         <div class="form-group">
             <label class="mr-sm-2" for="school">School*</label>
-            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="school" name = "school" required>
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="school" name = "school" required value="{{school.pk}}">
                 {% for school in schools %}
                     <option value="{{school.pk}}">{{school.school_name}}</option>
                 {% endfor %}
@@ -66,15 +66,15 @@ create student account
         
         <div class="form-group">
             <label for="formGroupExampleInput2">ID Number*</label>
-            <input type="text" class="form-control" id="idno" name = "idno" required  onchange = "checkID()">
+            <input type="text" class="form-control" id="idno" name = "idno" required  onchange = "checkID()" value="{{idno}}">
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Mobile Number</label>
-            <input type="text" class="form-control" id="mobile_no" name = "mobile_number" required onchange = "checkMobileNo()">
+            <input type="text" class="form-control" id="mobile_no" name = "mobile_number" required onchange = "checkMobileNo()" value="{{mobile_number}}">
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Email address*</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name = "email" required onchange = "checkEmail()" >
+            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name = "email" required onchange = "checkEmail()" value="{{email}}" >
             <small id="emailHelp" class="form-text text-muted" >We'll never share your email with anyone else.</small>
         </div>
         <div class="form-group">
@@ -84,6 +84,10 @@ create student account
         <div class="form-group">
             <label for="exampleInputPassword1">Re-enter Password*</label>
             <input type="password" class="form-control" id="psw2" required name = "psw2" onchange="checkPasswords()">
+        </div>
+        <div class="form-group">
+            <img src="{{captcha.url}}" class="img-thumbnail">
+            <input class="form-control w-25" type="text" placeholder="enter captcha" name="captcha" required>
         </div>
         {% if messages %}
             {% for message in messages %}

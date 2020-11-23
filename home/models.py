@@ -67,6 +67,10 @@ class Score(models.Model):
     score = models.IntegerField()
     max_score = models.IntegerField()
 
+class Captcha(models.Model): 
+    captcha_input = models.CharField(max_length=5) 
+    captcha_img = models.ImageField(upload_to='captcha_images') 
+
 
 
 

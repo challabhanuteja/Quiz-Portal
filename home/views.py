@@ -9,23 +9,33 @@ from django.conf import settings
 from .forms import *
 import pandas as pd
 import os
-
+from random import randint
 def index(request):
     return render(request, 'index.html')
 
+real_captcha = randint(0,1040)
 def userLogin(request):
+    global real_captcha
     if request.method == "POST":
         email = request.POST["email"]
         password = request.POST["password"]
-        s = authenticate(username = email,password =  password)
-        # need to change this code
-        if s !=None:
-            login(request,s)
-            return redirect('/user-dashboard/')
+        captcha = request.POST["captcha"]
+        if captcha == Captcha.objects.get(pk = real_captcha).captcha_input:
+            s = authenticate(username = email,password =  password)
+            # need to change this code
+            if s !=None:
+                login(request,s)
+                return redirect('/user-dashboard/')
+            else:
+                messages.warning(request, 'Invalid username or password')
+                return redirect("/user-login/")
         else:
-            messages.warning(request, 'Invalid username or password')
+            messages.warning(request, 'Invalid captcha')
+            real_captcha = randint(0,1040)
             return redirect("/user-login/")
-    return render(request, "user-login.html")
+    real_captcha = randint(0,1040)
+    context = {"captcha" : Captcha.objects.get(pk = real_captcha).captcha_img}
+    return render(request, "user-login.html", context)
 def userLogout(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully')
@@ -37,58 +47,76 @@ def createNewAccount(request):
     
 def createStudentAccount(request):
     context ={}
-    context["schools"] = School.objects.all()
-
+    
+    global real_captcha
     if request.method == "POST":
         student = QPUser()
-        student.first_name = request.POST.get("fname")
-        student.last_name = request.POST.get("lname")
-        student.gender = request.POST.get("gender")
-        student.date_of_birth = request.POST.get("dob")
+        student.first_name = fname = request.POST.get("fname")
+        student.last_name = lname = request.POST.get("lname")
+        student.gender = gender = request.POST.get("gender")
+        student.date_of_birth = dob = request.POST.get("dob")
         school1 = School.objects.get(pk = int(request.POST.get("school")))
         student.school = school1
         standard1 = Standard.objects.filter(school = school1)[0]
         student.standard = standard1
         # print(Section.objects.filter(standard = standard1))
         student.section = Section.objects.filter(standard = standard1)[0]
-        student.idno = request.POST.get("idno")
-        student.mobile_number = request.POST.get("mobile_number")
-        student.email = request.POST.get("email")
+        student.idno = idno = request.POST.get("idno")
+        student.mobile_number = mobile_number = request.POST.get("mobile_number")
+        student.email = email = request.POST.get("email")
         student.set_password(request.POST.get('psw1'))
         student.is_student = True
         student.is_teacher = False
         student.username = request.POST.get("email")
         student.date_joined = datetime.today()
-        student.save()
-        messages.success(request, 'You have been registered successfully')
+        captcha = request.POST["captcha"]
+        # print(school1.pk)
+        context = {"fname" : fname, "lname" : lname, "gender": gender, "dob" : dob, "school" : school1, "idno": idno, "mobile_number" : mobile_number, "email":email}
+        if captcha == Captcha.objects.get(pk = real_captcha).captcha_input:
+            student.save()
+            messages.success(request, 'You have been registered successfully')
+        else:
+            messages.success(request, 'Invalid Captcha')
+    real_captcha = randint(0,1040)
+    context["captcha"] =  Captcha.objects.get(pk = real_captcha).captcha_img
+    context["schools"] = School.objects.all()
     return render(request, "create-student-account.html", context)
  #need to add mobile number in teacheraccount   
 def createTeacherAccount(request):
+    global real_captcha
     context ={}
-    context["schools"] = School.objects.all()
-
+    
     if request.method == "POST":
         teacher = QPUser()
-        teacher.first_name = request.POST.get("fname")
-        teacher.last_name = request.POST.get("lname")
-        teacher.gender = request.POST.get("gender")
-        teacher.date_of_birth = request.POST.get("dob")
+        teacher.first_name = fname = request.POST.get("fname")
+        teacher.last_name = lname = request.POST.get("lname")
+        teacher.gender = gender = request.POST.get("gender")
+        teacher.date_of_birth = dob = request.POST.get("dob")
         school1 = School.objects.get(pk = int(request.POST.get("school")))
         teacher.school = school1
         standard1 = Standard.objects.filter(school = school1)[0]
         teacher.standard = standard1
         # print(Section.objects.filter(standard = standard1))
         teacher.section = Section.objects.filter(standard = standard1)[0]
-        teacher.idno = request.POST.get("idno")
-        teacher.mobile_number = request.POST.get("mobile_number")
-        teacher.email = request.POST.get("email")
+        teacher.idno = idno = request.POST.get("idno")
+        teacher.mobile_number = mobile_number = request.POST.get("mobile_number")
+        teacher.email = email = request.POST.get("email")
         teacher.set_password(request.POST.get('psw1'))
         teacher.is_teacher = True
         teacher.is_student = False
         teacher.username = request.POST.get("email")
         teacher.date_joined = datetime.today()
-        teacher.save()
-        messages.success(request, 'You have been registered successfully')
+        captcha = request.POST["captcha"]
+        # print(school1.pk)
+        context = {"fname" : fname, "lname" : lname, "gender": gender, "dob" : dob, "school" : school1, "idno": idno, "mobile_number" : mobile_number, "email":email}
+        if captcha == Captcha.objects.get(pk = real_captcha).captcha_input:
+            teacher.save()
+            messages.success(request, 'You have been registered successfully')
+        else:
+            messages.success(request, 'Invalid Captcha')
+    real_captcha = randint(0,1040)
+    context["captcha"] =  Captcha.objects.get(pk = real_captcha).captcha_img
+    context["schools"] = School.objects.all()
     return render(request, "create-teacher-account.html",context)
     
 
@@ -338,10 +366,4 @@ def create_new_quiz(request):
         else:
             messages.warning(request, "fill all the required details correctly") 
     return render(request, "create-new-quiz.html", context)
-
-
-
-
-
-
 
