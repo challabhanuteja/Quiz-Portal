@@ -11,7 +11,15 @@ import pandas as pd
 import os
 from random import randint
 def index(request):
-    return render(request, 'index.html')
+    context = {}
+    context["total_users"] = QPUser.objects.all().count()
+    context["total_teachers"] = QPUser.objects.filter(is_teacher = True).count()
+    context["total_students"] = QPUser.objects.filter(is_student = True).count()
+    context["total_schools"] = School.objects.all().count()
+    context["total_questions"] = MultipleChoiceQuestion.objects.all().count()
+    context["total_quizzes"] = Quiz.objects.all().count()
+
+    return render(request, 'index.html', context)
 
 real_captcha = randint(0,1040)
 def userLogin(request):
