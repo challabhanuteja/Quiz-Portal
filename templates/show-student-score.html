@@ -3,8 +3,15 @@
 view test scores
 {% endblock title %}
 {% block body %}
-<div class="content mt-5">
-    <h1>You score is {{score}}/{{max_score}}</h1>
+<div class="content mt-5 ml-5">
+    {% if write %}
+    <h1>You present score is {{present_score}} / {{score.max_score}}</h1>
+    {% endif %}
+    {% if did_not_wrote %}
+    <h1>You didn't wrote this quiz</h1>
+    {% else %}
+    <h1>You highest score is {{score.score}} / {{score.max_score}}</h1>
+    {% endif %}
     <a href="/user-dashboard">Go back</a>
 </div>
 

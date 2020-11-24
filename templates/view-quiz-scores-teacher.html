@@ -25,5 +25,9 @@ view quiz questions
     {% endfor %}
   </tbody>
 </table>
+<form action="/view-quiz-scores-{{quiz_id}}/" method="POST">
+    {% csrf_token %}
+  <button type="submit">Download Scores</button>
+</form>
 
 {% endblock body %}

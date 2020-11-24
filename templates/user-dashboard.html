@@ -3,32 +3,103 @@
 dashboard
 {% endblock title %}
 {% block body %}
+<style>
+.fifty-chars {
+    width: 30ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+</style>
 <h1 class="d-flex justify-content-center">Dashboard</h1>
-<div class="container">
+<div class="container-fluid mx-4">
         {% if user.is_teacher %}
             <a href="/create-new-quiz" class="btn btn-primary">Create New Quiz</a>
             {% if no_quizzes%}
                 <h2>You have not created any quizzes yet</h2>
             {% endif %}
         {% endif %}
-        {% for quiz in quizzes %}
-            <div class="card my-2" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{quiz.name}}</h5>
-                    <p class="card-text">{{quiz.date_created}}</p>
-                    <p class="card-text">{{quiz.quiz_description}}</p>
-                    {% if user.is_student %}
-                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Start</a>
-                    {% else %}
-                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Test Quiz</a>
-                    <a href="/add-questions-{{quiz.pk}}/" class="btn btn-primary mt-1">Add Questions</a>
-                    <a href="/view-quiz-scores-{{quiz.pk}}/" class="btn btn-primary mt-1">View quiz scores</a>
-                    <a href="/edit-quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Edit quiz details</a>
-                    {% endif %}
-                    
+        
+        {% if no_of_present_quizzes != 0 %}
+            <div>
+                <h3 class="mt-4">Present Quizzes</h3>
+                <div class="d-flex flex-wrap">
+                        {% for quiz in present_quizzes %}
+                            <div class="card mr-2 mt-2 " style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{quiz.name}}</h5>
+                                    <p class="card-text">{{quiz.start_time}} - {{quiz.end_time}}</p>
+                                    <p class="card-text fifty-chars">{{quiz.quiz_description}}</p>
+                                    {% if user.is_student %}
+                                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Start</a>
+                                    <a href="/view-quiz-scores-{{quiz.pk}}/" class="btn btn-primary mt-1">View Score</a>
+                                    {% else %}
+                                    <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Test Quiz</a>
+                                    <a href="/add-questions-{{quiz.pk}}/" class="btn btn-primary mt-1">Add Questions</a>
+                                    <a href="/view-quiz-scores-{{quiz.pk}}/" class="btn btn-primary mt-1">View quiz scores</a>
+                                    <a href="/edit-quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Edit quiz details</a>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                        {% endfor %}
                 </div>
             </div>
-        {% endfor %}
+        {% endif %}
+        
+        {% if no_of_future_quizzes != 0 %}
+            <div>
+                <h3 class="mt-4">Future Quizzes</h3>
+                <div class="d-flex flex-wrap">
+                    {% for quiz in future_quizzes %}
+                        <div class="card mr-2 mt-2 " style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{quiz.name}}</h5>
+                                <p class="card-text">{{quiz.start_time}} - {{quiz.end_time}}</p>
+                                <p class="card-text fifty-chars">{{quiz.quiz_description}}</p>
+                                {% comment %} {% if user.is_student %}
+                                <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Start</a>
+                                {% else %} {% endcomment %}
+                                {% if user.is_teacher %}
+                                <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Test Quiz</a>
+                                <a href="/add-questions-{{quiz.pk}}/" class="btn btn-primary mt-1">Add Questions</a>
+                                <a href="/view-quiz-scores-{{quiz.pk}}/" class="btn btn-primary mt-1">View quiz scores</a>
+                                <a href="/edit-quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Edit quiz details</a>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if no_of_ended_quizzes != 0 %}
+            <div>
+                <h3 class="mt-4">Ended Quizzes</h3>
+                <div class="d-flex flex-wrap">
+                    {% for quiz in ended_quizzes %}
+                        <div class="card mr-2 mt-2 " style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{quiz.name}}</h5>
+                                <p class="card-text">{{quiz.start_time}} - {{quiz.end_time}}</p>
+                                <p class="card-text fifty-chars">{{quiz.quiz_description}}</p>
+                                {% if user.is_student %}
+                                <a href="/view-quiz-scores-{{quiz.pk}}/" class="btn btn-primary mt-1">View Score</a>
+                                {% else %}
+                                <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Test Quiz</a>
+                                <a href="/add-questions-{{quiz.pk}}/" class="btn btn-primary mt-1">Add Questions</a>
+                                <a href="/view-quiz-scores-{{quiz.pk}}/" class="btn btn-primary mt-1">View quiz scores</a>
+                                <a href="/edit-quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Edit quiz details</a>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}       
+        
 </div>
 
 {% endblock body %}

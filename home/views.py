@@ -10,6 +10,7 @@ from .forms import *
 import pandas as pd
 import os
 from random import randint
+import csv
 def index(request):
     context = {}
     context["total_users"] = QPUser.objects.all().count()
@@ -154,18 +155,28 @@ def userAccount(request):
     return render(request, "user-account.html")
 
 def userDashboard(request):
-    try:
-        quizzes = {}
-        if request.user.is_student:
-            quizzes = Quiz.objects.filter(assigned_to = request.user.standard)
-        elif request.user.is_teacher:
-            quizzes = Quiz.objects.filter(created_by = request.user.pk)
-        context = {"quizzes": quizzes}
-        if len(quizzes) == 0:
-            context["no_quizzes"] = True
-        return render(request, "user-dashboard.html", context)
-    except:
-        return render(request, "user-dashboard.html")
+    # try:
+    context  = {}
+    if request.user.is_student:
+        context["present_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+        context["future_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, start_time__gte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+        context["ended_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, end_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    elif request.user.is_teacher: 
+        context["present_quizzes"] = Quiz.objects.filter(created_by = request.user, end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+        context["future_quizzes"] = Quiz.objects.filter(created_by = request.user, start_time__gte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+        context["ended_quizzes"] = Quiz.objects.filter(created_by = request.user, end_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    
+    context["no_of_present_quizzes"] = len(context["present_quizzes"])
+    context["no_of_ended_quizzes"] = len(context["ended_quizzes"])
+    context["no_of_future_quizzes"] = len(context["future_quizzes"])
+
+        
+
+        # if len(quizzes) == 0:
+        #     context["no_quizzes"] = True
+    return render(request, "user-dashboard.html", context)
+    # except:
+    #     return render(request, "user-dashboard.html")
 
 def editUserAcc(request):
     if request.method == "POST":
@@ -207,8 +218,9 @@ def file_is_valid_mcq(input_file):
     return True
 def single_slug(request, single_slug):
     temp_q = single_slug.split("-")
-    if request.method == "POST":
-        if temp_q[0] == 'quiz':
+    
+    if temp_q[0] == 'quiz':
+        if request.method == "POST":
             quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
             questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1)
             context = {"questions": questions, "quiz":quiz1}
@@ -233,10 +245,12 @@ def single_slug(request, single_slug):
                     answers_correct = list(set(real_answers) & set(answers_written))
                     score += len(answers_correct)/len(real_answers)
 
+            stemp = None
             try:
-                stemp = Score.objects.get(qpuser = request.user)
+                stemp = Score.objects.filter(quizid = quiz1).get(qpuser = request.user)
                 if stemp.score< score:
                     stemp.score = score
+                    stemp.max_score = len(questions)
                     stemp.save()
             except:
                 stemp = Score()
@@ -245,8 +259,16 @@ def single_slug(request, single_slug):
                 stemp.score = score
                 stemp.max_score = len(questions)
                 stemp.save()
-            return render(request,"show-student-score.html", context = {"score": score, "max_score": len(questions)})
-        elif temp_q[0] == 'add':
+            return render(request,"show-student-score.html", context = {"score": stemp, "write" : True, "present_score" : score})
+        quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
+        questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1).order_by("question_no")
+        context = {"questions": questions, "quiz": quiz1, "duration": quiz1.duration}
+        if len(questions) != 0:
+            return render(request, "write_quiz.html", context)
+        else:
+            return HttpResponse("Quiz is not ready yet")
+    elif temp_q[0] == 'add':
+        if request.method == "POST":
             input_file = request.FILES["input_file"]
             
             if file_is_valid_mcq(input_file):
@@ -281,7 +303,10 @@ def single_slug(request, single_slug):
             else:
                 messages.warning(request, "Please upload a valid file according to the instructions given above")
             return render(request, "add-questions.html", context = {"quiz_id" : temp_q[2]})
-        elif temp_q[0]=="edit" and temp_q[1]=="quiz":
+        context ={"quiz_id" : temp_q[2]}
+        return render(request, "add-questions.html", context = context)
+    elif temp_q[0]=="edit" and temp_q[1]=="quiz":
+        if request.method == "POST":
             quiz_obj = Quiz.objects.get(pk = temp_q[2])
             quiz_obj.name = request.POST.get("quiz-name")
             quiz_obj.quiz_description = request.POST.get("quiz_description")
@@ -302,30 +327,18 @@ def single_slug(request, single_slug):
             quiz_obj.save()
             messages.success(request, "Quiz Details Updated Successfully")
             return render(request, "edit_quiz.html")
-    elif temp_q[0] == 'quiz':
-        quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
-        questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1).order_by("question_no")
-        context = {"questions": questions, "quiz": quiz1, "duration": quiz1.duration}
-        if len(questions) != 0:
-            return render(request, "write_quiz.html", context)
-        else:
-            return HttpResponse("Quiz is not ready yet")
-
-    elif temp_q[0] == 'add':
-        context ={"quiz_id" : temp_q[2]}
-        return render(request, "add-questions.html", context = context)
-    elif temp_q[0] == "view" and temp_q[1] == "quiz" and temp_q[2] == "scores":
-        #getting the required scores from the database
-        req_scores = Score.objects.filter(quizid = Quiz.objects.get(pk = temp_q[3]))
-        context ={"scores" : req_scores}
-        return view_quiz_score(request, context)
-    elif temp_q[0]=="edit" and temp_q[1]=="quiz":
         quiz_obj = Quiz.objects.get(pk = temp_q[2])
         context = {"quiz" : quiz_obj}
         context["standards"] = Standard.objects.filter(school = request.user.school)
         context["start_time"] = get_bootstrap_format(quiz_obj.start_time)
         context["end_time"] = get_bootstrap_format(quiz_obj.end_time)
         return render(request, "edit_quiz.html", context)
+    
+    elif temp_q[0] == "view" and temp_q[1] == "quiz" and temp_q[2] == "scores":
+        #getting the required scores from the database
+        req_scores = Score.objects.filter(quizid = Quiz.objects.get(pk = temp_q[3]))
+        context ={"scores" : req_scores, "quiz_id": temp_q[3]}
+        return view_quiz_score(request, context)
 
     elif temp_q[0] == "delete" and temp_q[1] == "quiz":
         entry= Quiz.objects.get(pk = int(temp_q[2]))
@@ -339,8 +352,26 @@ def get_bootstrap_format(x):
 
 def view_quiz_score(request, context):
     if request.user.is_teacher:
+        if request.method == "POST":
+            items = context["scores"]
+            response = HttpResponse(content_type = 'text/csv')
+            response["Content-Disposal"] = 'attachment; filename="scores.csv"'
 
+            writer = csv.writer(response, delimiter= ",")
+            writer.writerow(["#", "ID No", "Name", "Email", "Score", "Max Score"])
+            x = 1
+            for obj in items:
+                writer.writerow([x, obj.qpuser.idno, obj.qpuser.first_name + " "+ obj.qpuser.last_name, obj.qpuser.email, obj.score, obj.max_score])
+                x+=1
+            return response
         return render(request, "view-quiz-scores-teacher.html", context = context)
+    else:
+        try:
+            score = Score.objects.get(qpuser = request.user, quizid = context["quiz_id"])
+            return render(request,"show-student-score.html", context = {"score": score})
+        except:
+            return render(request,"show-student-score.html", context = {"did_not_wrote": True})
+        
 
 def create_new_quiz(request):
     context = dict()
