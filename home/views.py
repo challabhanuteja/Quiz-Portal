@@ -158,13 +158,15 @@ def userDashboard(request):
     # try:
     context  = {}
     if request.user.is_student:
-        context["present_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         context["future_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, start_time__gte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         context["ended_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, end_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+        context["present_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard,start_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")), end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+        
     elif request.user.is_teacher: 
-        context["present_quizzes"] = Quiz.objects.filter(created_by = request.user, end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         context["future_quizzes"] = Quiz.objects.filter(created_by = request.user, start_time__gte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         context["ended_quizzes"] = Quiz.objects.filter(created_by = request.user, end_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+        context["present_quizzes"] = Quiz.objects.filter(created_by = request.user,start_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")), end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+        
     
     context["no_of_present_quizzes"] = len(context["present_quizzes"])
     context["no_of_ended_quizzes"] = len(context["ended_quizzes"])
@@ -218,55 +220,61 @@ def file_is_valid_mcq(input_file):
     return True
 def single_slug(request, single_slug):
     temp_q = single_slug.split("-")
-    
     if temp_q[0] == 'quiz':
-        if request.method == "POST":
-            quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
-            questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1)
-            context = {"questions": questions, "quiz":quiz1}
-            score = 0
-            for question in questions:
-                if question.is_multiple_ans == "N":
-                    if question.answer == request.POST.get("question-"+str(question.pk)):
-                        # print(question.answer, request.POST.get("question-"+str(question.pk)))
-                        score+=1
-                else:
-                    answers_written = []
-                    if request.POST.get("question-"+str(question.pk)+"-ans-1", None)!=None:
-                        answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-1", None))
-                    if request.POST.get("question-"+str(question.pk)+"-ans-2", None)!=None:
-                        answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-2", None))
-                    if request.POST.get("question-"+str(question.pk)+"-ans-3", None)!=None:
-                        answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-3", None))
-                    if request.POST.get("question-"+str(question.pk)+"-ans-4", None)!=None:
-                        answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-4", None))
-                    real_answers = question.answer
-                    real_answers = [x for x in real_answers.split(" ~ ")]
-                    answers_correct = list(set(real_answers) & set(answers_written))
-                    score += len(answers_correct)/len(real_answers)
-
-            stemp = None
-            try:
-                stemp = Score.objects.filter(quizid = quiz1).get(qpuser = request.user)
-                if stemp.score< score:
-                    stemp.score = score
-                    stemp.max_score = len(questions)
-                    stemp.save()
-            except:
-                stemp = Score()
-                stemp.quizid = quiz1
-                stemp.qpuser = request.user
-                stemp.score = score
-                stemp.max_score = len(questions)
-                stemp.save()
-            return render(request,"show-student-score.html", context = {"score": stemp, "write" : True, "present_score" : score})
         quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
-        questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1).order_by("question_no")
-        context = {"questions": questions, "quiz": quiz1, "duration": quiz1.duration}
-        if len(questions) != 0:
-            return render(request, "write_quiz.html", context)
+        if(request.user.is_teacher == True or request.user.standard == quiz1.assigned_to):
+            print(quiz1.start_time <= datetime.now(quiz1.start_time.tzinfo) < quiz1.end_time, quiz1.start_time , datetime.now(quiz1.start_time.tzinfo) , quiz1.end_time)
+            if(request.user.is_teacher == True or (quiz1.start_time <= datetime.now() < quiz1.end_time)):
+                if request.method == "POST":
+                    questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1)
+                    context = {"questions": questions, "quiz":quiz1}
+                    score = 0
+                    for question in questions:
+                        if question.is_multiple_ans == "N":
+                            if question.answer == request.POST.get("question-"+str(question.pk)):
+                                # print(question.answer, request.POST.get("question-"+str(question.pk)))
+                                score+=1
+                        else:
+                            answers_written = []
+                            if request.POST.get("question-"+str(question.pk)+"-ans-1", None)!=None:
+                                answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-1", None))
+                            if request.POST.get("question-"+str(question.pk)+"-ans-2", None)!=None:
+                                answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-2", None))
+                            if request.POST.get("question-"+str(question.pk)+"-ans-3", None)!=None:
+                                answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-3", None))
+                            if request.POST.get("question-"+str(question.pk)+"-ans-4", None)!=None:
+                                answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-4", None))
+                            real_answers = question.answer
+                            real_answers = [x for x in real_answers.split(" ~ ")]
+                            answers_correct = list(set(real_answers) & set(answers_written))
+                            score += len(answers_correct)/len(real_answers)
+
+                    stemp = None
+                    try:
+                        stemp = Score.objects.filter(quizid = quiz1).get(qpuser = request.user)
+                        if stemp.score< score:
+                            stemp.score = score
+                            stemp.max_score = len(questions)
+                            stemp.save()
+                    except:
+                        stemp = Score()
+                        stemp.quizid = quiz1
+                        stemp.qpuser = request.user
+                        stemp.score = score
+                        stemp.max_score = len(questions)
+                        stemp.save()
+                    return render(request,"show-student-score.html", context = {"score": stemp, "write" : True, "present_score" : score})
+                questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1).order_by("question_no")
+                context = {"questions": questions, "quiz": quiz1, "duration": quiz1.duration}
+                if len(questions) != 0:
+                    return render(request, "write_quiz.html", context)
+                else:
+                    return HttpResponse("Quiz is not ready yet")
+            else:
+                return HttpResponse("Quiz is not ready yet or got expired")
         else:
-            return HttpResponse("Quiz is not ready yet")
+            return HttpResponse("This quiz is not for your standard")
+            
     elif temp_q[0] == 'add':
         if request.method == "POST":
             input_file = request.FILES["input_file"]
