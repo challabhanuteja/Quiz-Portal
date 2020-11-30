@@ -22,14 +22,13 @@ def index(request):
 
     return render(request, 'index.html', context)
 
-real_captcha = randint(1,1070)
+
 def userLogin(request):
-    global real_captcha
     if request.method == "POST":
         email = request.POST["email"]
         password = request.POST["password"]
         captcha = request.POST["captcha"]
-        if captcha == Captcha.objects.get(pk = real_captcha).captcha_input:
+        if captcha == Captcha.objects.get(pk = request.session["captcha"]).captcha_input:
             s = authenticate(username = email,password =  password)
             # need to change this code
             if s !=None:
@@ -40,10 +39,10 @@ def userLogin(request):
                 return redirect("/user-login/")
         else:
             messages.warning(request, 'Invalid captcha')
-            real_captcha = randint(1,1070)
+            request.session["captcha"] = randint(1,1070)
             return redirect("/user-login/")
-    real_captcha = randint(1,1070)
-    context = {"captcha" : Captcha.objects.get(pk = real_captcha).captcha_img}
+    request.session["captcha"] = randint(1,1070)
+    context = {"captcha" : Captcha.objects.get(pk = request.session["captcha"]).captcha_img}
     return render(request, "user-login.html", context)
 def userLogout(request):
     logout(request)
@@ -56,8 +55,6 @@ def createNewAccount(request):
     
 def createStudentAccount(request):
     context ={}
-    
-    global real_captcha
     if request.method == "POST":
         student = QPUser()
         student.first_name = fname = request.POST.get("fname")
@@ -81,20 +78,18 @@ def createStudentAccount(request):
         captcha = request.POST["captcha"]
         # print(school1.pk)
         context = {"fname" : fname, "lname" : lname, "gender": gender, "dob" : dob, "school" : school1, "idno": idno, "mobile_number" : mobile_number, "email":email}
-        if captcha == Captcha.objects.get(pk = real_captcha).captcha_input:
+        if captcha == Captcha.objects.get(pk = request.session["captcha"]).captcha_input:
             student.save()
             messages.success(request, 'You have been registered successfully')
         else:
-            messages.success(request, 'Invalid Captcha')
-    real_captcha = randint(1,1070)
-    context["captcha"] =  Captcha.objects.get(pk = real_captcha).captcha_img
+            messages.warning(request, 'Invalid Captcha')
+    request.session["captcha"] = randint(1,1070)
+    context["captcha"] =  Captcha.objects.get(pk = request.session["captcha"]).captcha_img
     context["schools"] = School.objects.all()
     return render(request, "create-student-account.html", context)
  #need to add mobile number in teacheraccount   
 def createTeacherAccount(request):
-    global real_captcha
     context ={}
-    
     if request.method == "POST":
         teacher = QPUser()
         teacher.first_name = fname = request.POST.get("fname")
@@ -118,13 +113,13 @@ def createTeacherAccount(request):
         captcha = request.POST["captcha"]
         # print(school1.pk)
         context = {"fname" : fname, "lname" : lname, "gender": gender, "dob" : dob, "school" : school1, "idno": idno, "mobile_number" : mobile_number, "email":email}
-        if captcha == Captcha.objects.get(pk = real_captcha).captcha_input:
+        if captcha == Captcha.objects.get(pk = request.session["captcha"]).captcha_input:
             teacher.save()
             messages.success(request, 'You have been registered successfully')
         else:
-            messages.success(request, 'Invalid Captcha')
-    real_captcha = randint(1,1070)
-    context["captcha"] =  Captcha.objects.get(pk = real_captcha).captcha_img
+            messages.warning(request, 'Invalid Captcha')
+    request.session["captcha"] = randint(1,1070)
+    context["captcha"] =  Captcha.objects.get(pk = request.session["captcha"]).captcha_img
     context["schools"] = School.objects.all()
     return render(request, "create-teacher-account.html",context)
     
