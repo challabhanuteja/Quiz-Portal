@@ -284,14 +284,14 @@ def single_slug(request, single_slug):
                 entries.delete()
                 df = pd.read_excel(input_file, dtype=str)
                 for i in range(len(df)):
-                    q_no = str(df.iloc[i,0])
-                    q_des = str(df.iloc[i,1])
-                    o1 = str(df.iloc[i,2])
-                    o2 = str(df.iloc[i,3])
-                    o2 = str(df.iloc[i,3])
-                    o3 = str(df.iloc[i,4])
-                    o4 = str(df.iloc[i,5])
-                    ans = str(df.iloc[i,6])
+                    q_no = df.iloc[i,0]
+                    q_des = df.iloc[i,1]
+                    o1 = df.iloc[i,2]
+                    o2 = df.iloc[i,3]
+                    o2 = df.iloc[i,3]
+                    o3 = df.iloc[i,4]
+                    o4 = df.iloc[i,5]
+                    ans = df.iloc[i,6]
                     is_multi_ans = str(df.iloc[i,7])
                     question = MultipleChoiceQuestion()
                     question.question_no = q_no

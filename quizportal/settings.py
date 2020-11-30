@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+import django_heroku
 import os
 import home
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -125,6 +125,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,"static"),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
@@ -136,3 +137,4 @@ EMAIL_HOST_USER = "nicquizportal@gmail.com"
 EMAIL_HOST_PASSWORD = "NicQuiz123"
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_HOST_PASSWORD = "NicQuiz123"
+django_heroku.settings(locals())
