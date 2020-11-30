@@ -22,7 +22,7 @@ def index(request):
 
     return render(request, 'index.html', context)
 
-real_captcha = randint(0,1040)
+real_captcha = randint(1,1070)
 def userLogin(request):
     global real_captcha
     if request.method == "POST":
@@ -40,9 +40,9 @@ def userLogin(request):
                 return redirect("/user-login/")
         else:
             messages.warning(request, 'Invalid captcha')
-            real_captcha = randint(0,1040)
+            real_captcha = randint(1,1070)
             return redirect("/user-login/")
-    real_captcha = randint(0,1040)
+    real_captcha = randint(1,1070)
     context = {"captcha" : Captcha.objects.get(pk = real_captcha).captcha_img}
     return render(request, "user-login.html", context)
 def userLogout(request):
@@ -86,7 +86,7 @@ def createStudentAccount(request):
             messages.success(request, 'You have been registered successfully')
         else:
             messages.success(request, 'Invalid Captcha')
-    real_captcha = randint(0,1040)
+    real_captcha = randint(1,1070)
     context["captcha"] =  Captcha.objects.get(pk = real_captcha).captcha_img
     context["schools"] = School.objects.all()
     return render(request, "create-student-account.html", context)
@@ -123,7 +123,7 @@ def createTeacherAccount(request):
             messages.success(request, 'You have been registered successfully')
         else:
             messages.success(request, 'Invalid Captcha')
-    real_captcha = randint(0,1040)
+    real_captcha = randint(1,1070)
     context["captcha"] =  Captcha.objects.get(pk = real_captcha).captcha_img
     context["schools"] = School.objects.all()
     return render(request, "create-teacher-account.html",context)
