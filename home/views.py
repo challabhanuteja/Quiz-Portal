@@ -245,9 +245,14 @@ def single_slug(request, single_slug):
                             if request.POST.get("question-"+str(question.pk)+"-ans-4", None)!=None:
                                 answers_written.append(request.POST.get("question-"+str(question.pk)+"-ans-4", None))
                             real_answers = question.answer
-                            real_answers = [x for x in real_answers.split(" ~ ")]
-                            answers_correct = list(set(real_answers) & set(answers_written))
-                            score += len(answers_correct)/len(real_answers)
+                            answers_written = set(answers_written)
+                            real_answers = set([x for x in real_answers.split(" ~ ")])
+                            answers_correct = real_answers & answers_written
+                            print("...............................",answers_written - answers_correct)
+
+                            answers_wrong = len(answers_written - answers_correct)
+                            answers_correct = len(answers_correct)
+                            score += (answers_correct - answers_wrong)/len(real_answers)
 
                     stemp = None
                     try:
