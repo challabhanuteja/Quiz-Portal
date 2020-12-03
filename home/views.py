@@ -363,7 +363,7 @@ def view_quiz_score(request, context):
         if request.method == "POST":
             items = context["scores"]
             response = HttpResponse(content_type = 'text/csv')
-            response["Content-Disposal"] = 'attachment; filename="scores.csv"'
+            response["Content-Disposition"] = 'attachment; filename = "scores.csv"'
 
             writer = csv.writer(response, delimiter= ",")
             writer.writerow(["#", "ID No", "Name", "Email", "Score", "Max Score"])

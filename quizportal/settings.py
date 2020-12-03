@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '-km)i&w(8a#&@o=94#x0bx7^+gl@r$&3xrbzfw_pos&c^ixy7$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -126,6 +126,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,"static"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
@@ -136,5 +137,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "nicquizportal@gmail.com"
 EMAIL_HOST_PASSWORD = "NicQuiz123"
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST_PASSWORD = "NicQuiz123"
+
 django_heroku.settings(locals())
