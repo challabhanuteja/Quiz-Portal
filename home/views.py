@@ -30,7 +30,6 @@ def userLogin(request):
         captcha = request.POST["captcha"]
         if captcha == Captcha.objects.get(pk = request.session["captcha"]).captcha_input:
             s = authenticate(username = email,password =  password)
-            # need to change this code
             if s !=None:
                 login(request,s)
                 return redirect('/user-dashboard/')
@@ -65,7 +64,6 @@ def createStudentAccount(request):
         student.school = school1
         standard1 = Standard.objects.filter(school = school1)[0]
         student.standard = standard1
-        # print(Section.objects.filter(standard = standard1))
         student.section = Section.objects.filter(standard = standard1)[0]
         student.idno = idno = request.POST.get("idno")
         student.mobile_number = mobile_number = request.POST.get("mobile_number")
@@ -76,7 +74,6 @@ def createStudentAccount(request):
         student.username = request.POST.get("email")
         student.date_joined = datetime.today()
         captcha = request.POST["captcha"]
-        # print(school1.pk)
         context = {"fname" : fname, "lname" : lname, "gender": gender, "dob" : dob, "school" : school1, "idno": idno, "mobile_number" : mobile_number, "email":email}
         if captcha == Captcha.objects.get(pk = request.session["captcha"]).captcha_input:
             student.save()
@@ -86,8 +83,7 @@ def createStudentAccount(request):
     request.session["captcha"] = randint(1,1070)
     context["captcha"] =  Captcha.objects.get(pk = request.session["captcha"]).captcha_img
     context["schools"] = School.objects.all()
-    return render(request, "create-student-account.html", context)
- #need to add mobile number in teacheraccount   
+    return render(request, "create-student-account.html", context)  
 def createTeacherAccount(request):
     context ={}
     if request.method == "POST":
@@ -100,7 +96,6 @@ def createTeacherAccount(request):
         teacher.school = school1
         standard1 = Standard.objects.filter(school = school1)[0]
         teacher.standard = standard1
-        # print(Section.objects.filter(standard = standard1))
         teacher.section = Section.objects.filter(standard = standard1)[0]
         teacher.idno = idno = request.POST.get("idno")
         teacher.mobile_number = mobile_number = request.POST.get("mobile_number")
@@ -111,7 +106,6 @@ def createTeacherAccount(request):
         teacher.username = request.POST.get("email")
         teacher.date_joined = datetime.today()
         captcha = request.POST["captcha"]
-        # print(school1.pk)
         context = {"fname" : fname, "lname" : lname, "gender": gender, "dob" : dob, "school" : school1, "idno": idno, "mobile_number" : mobile_number, "email":email}
         if captcha == Captcha.objects.get(pk = request.session["captcha"]).captcha_input:
             teacher.save()
@@ -131,7 +125,6 @@ def contactUs(request):
         s_email = request.POST.get("sender_email")
         s_name = request.POST.get("sender_name")
         s_message = request.POST.get("message_sent")
-        # print(s_email, s_message, s_name)
         send_mail(
             subject= s_email+" "+s_name,
             message= s_message,
@@ -150,7 +143,6 @@ def userAccount(request):
     return render(request, "user-account.html")
 
 def userDashboard(request):
-    # try:
     context  = {}
     if request.user.is_student:
         context["future_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, start_time__gte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
@@ -168,12 +160,7 @@ def userDashboard(request):
     context["no_of_future_quizzes"] = len(context["future_quizzes"])
 
         
-
-        # if len(quizzes) == 0:
-        #     context["no_quizzes"] = True
     return render(request, "user-dashboard.html", context)
-    # except:
-    #     return render(request, "user-dashboard.html")
 
 def editUserAcc(request):
     if request.method == "POST":
@@ -194,7 +181,6 @@ def editUserAcc(request):
         user.section = Section.objects.get(pk = int(section))
         user.standard = Standard.objects.get(pk = int(standard_id)) 
         user.idno = idno
-        # user.mobile_number = mobile_no
         user.save()
         messages.success(request, "Your details are updated successfully")
         return redirect("/user-account/")
@@ -218,7 +204,6 @@ def single_slug(request, single_slug):
     if temp_q[0] == 'quiz':
         quiz1 = Quiz.objects.get(pk = int(temp_q[1]))
         if(request.user.is_teacher == True or request.user.standard == quiz1.assigned_to):
-            print(quiz1.start_time <= datetime.now(quiz1.start_time.tzinfo) < quiz1.end_time, quiz1.start_time , datetime.now(quiz1.start_time.tzinfo) , quiz1.end_time)
             if(request.user.is_teacher == True or (quiz1.start_time <= datetime.now() < quiz1.end_time)):
                 if request.method == "POST":
                     questions = MultipleChoiceQuestion.objects.filter(quiz = quiz1)
@@ -227,7 +212,6 @@ def single_slug(request, single_slug):
                     for question in questions:
                         if question.is_multiple_ans == "N":
                             if question.answer == request.POST.get("question-"+str(question.pk)):
-                                # print(question.answer, request.POST.get("question-"+str(question.pk)))
                                 score+=1
                         else:
                             answers_written = []
@@ -243,8 +227,6 @@ def single_slug(request, single_slug):
                             answers_written = set(answers_written)
                             real_answers = set([x for x in real_answers.split(" ~ ")])
                             answers_correct = real_answers & answers_written
-                            print("...............................",answers_written - answers_correct)
-
                             answers_wrong = len(answers_written - answers_correct)
                             answers_correct = len(answers_correct)
                             score += (answers_correct - answers_wrong)/len(real_answers)
@@ -322,12 +304,10 @@ def single_slug(request, single_slug):
             x = request.POST.get("start_time").split("-")
             y = x[2].split("T")
             z = y[1].split(":")
-            # print(x[0], x[1], y[0], z[0], z[1])
             st = datetime(int(x[0]), int(x[1]), int(y[0]), int(z[0]), int(z[1]), 0, 0)
             x = request.POST.get("end_time").split("-")
             y = x[2].split("T")
             z = y[1].split(":")
-            # print(x[0], x[1], y[0], z[0], z[1])
             et = datetime(int(x[0]), int(x[1]), int(y[0]), int(z[0]), int(z[1]), 0, 0)
             quiz_obj.start_time =  st
             quiz_obj.end_time =  et
@@ -343,7 +323,6 @@ def single_slug(request, single_slug):
         return render(request, "edit_quiz.html", context)
     
     elif temp_q[0] == "view" and temp_q[1] == "quiz" and temp_q[2] == "scores":
-        #getting the required scores from the database
         req_scores = Score.objects.filter(quizid = Quiz.objects.get(pk = temp_q[3]))
         context ={"scores" : req_scores, "quiz_id": temp_q[3]}
         return view_quiz_score(request, context)
@@ -391,12 +370,10 @@ def create_new_quiz(request):
         x = request.POST.get("start_time").split("-")
         y = x[2].split("T")
         z = y[1].split(":")
-        # print(x[0], x[1], y[0], z[0], z[1])
         q_st = datetime(int(x[0]), int(x[1]), int(y[0]), int(z[0]), int(z[1]), 0, 0)
         x = request.POST.get("end_time").split("-")
         y = x[2].split("T")
         z = y[1].split(":")
-        # print(x[0], x[1], y[0], z[0], z[1])
         q_et = datetime(int(x[0]), int(x[1]), int(y[0]), int(z[0]), int(z[1]), 0, 0)
         quiz_obj.start_time =  q_st
         quiz_obj.end_time =  q_et

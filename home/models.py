@@ -3,7 +3,6 @@ from django.db import models
 from datetime import datetime, date
 
 class School(models.Model):
-    # id_no = models.IntegerField(unique=True)
     school_name = models.CharField(max_length=200)
     address = models.TextField()
     def __str__(self):
@@ -22,7 +21,6 @@ class QPUser(AbstractUser):
     gender = models.CharField(max_length = 10)
     mobile_number = models.CharField(max_length=10)
     school = models.ForeignKey(School, verbose_name="School", on_delete=models.SET_DEFAULT, default = 1)
-    # school_name = school.name
     standard =  models.ForeignKey(Standard, verbose_name="Stadard", on_delete=models.SET_DEFAULT, default = 1)
     section = models.ForeignKey(Section, verbose_name="Section", on_delete=models.SET_DEFAULT, default = 1)
     idno = models.CharField(max_length=10)
@@ -70,12 +68,3 @@ class Score(models.Model):
 class Captcha(models.Model): 
     captcha_input = models.CharField(max_length=10) 
     captcha_img = models.ImageField(upload_to='captcha_images') 
-
-
-
-
-
-
-    
-     
-

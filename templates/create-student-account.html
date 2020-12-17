@@ -101,21 +101,6 @@ create student account
         {% endif %}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-    <!-- <form action="/create-student-account/" method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-            <strong>{{message}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            {% endfor %}
-        {% endif %}
-        <button type="submit">Submit</button>
-    </form> -->
 </div>
 <script>
 function checkID()
@@ -131,7 +116,6 @@ function checkID()
 function checkMobileNo()
 {
     let x = document.getElementById("mobile_no").value;
-    // console.log(x.length)
     if(/^\d+$/.test(x) == false || x.length != 10)
     {
         alert("please enter correct Mobile Number");
