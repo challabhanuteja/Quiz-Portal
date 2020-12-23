@@ -17,7 +17,7 @@ def index(request):
     context["total_teachers"] = QPUser.objects.filter(is_teacher = True).count()
     context["total_students"] = QPUser.objects.filter(is_student = True).count()
     context["total_schools"] = School.objects.all().count()
-    context["total_questions"] = MultipleChoiceQuestion.objects.all().count()
+    context["total_users_online"] = LoggedInUser.objects.count()
     context["total_quizzes"] = Quiz.objects.all().count()
 
     return render(request, 'index.html', context)
@@ -144,21 +144,23 @@ def userAccount(request):
 
 def userDashboard(request):
     context  = {}
-    if request.user.is_student:
-        context["future_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, start_time__gte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-        context["ended_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, end_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-        context["present_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard,start_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")), end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    try:
+        if request.user.is_student:
+            context["future_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, start_time__gte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            context["ended_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard, end_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            context["present_quizzes"] = Quiz.objects.filter(assigned_to = request.user.standard,start_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")), end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            
+        elif request.user.is_teacher: 
+            context["future_quizzes"] = Quiz.objects.filter(created_by = request.user, start_time__gte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            context["ended_quizzes"] = Quiz.objects.filter(created_by = request.user, end_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            context["present_quizzes"] = Quiz.objects.filter(created_by = request.user,start_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")), end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            
         
-    elif request.user.is_teacher: 
-        context["future_quizzes"] = Quiz.objects.filter(created_by = request.user, start_time__gte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-        context["ended_quizzes"] = Quiz.objects.filter(created_by = request.user, end_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-        context["present_quizzes"] = Quiz.objects.filter(created_by = request.user,start_time__lte = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")), end_time__gte= str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-        
-    
-    context["no_of_present_quizzes"] = len(context["present_quizzes"])
-    context["no_of_ended_quizzes"] = len(context["ended_quizzes"])
-    context["no_of_future_quizzes"] = len(context["future_quizzes"])
-
+        context["no_of_present_quizzes"] = len(context["present_quizzes"])
+        context["no_of_ended_quizzes"] = len(context["ended_quizzes"])
+        context["no_of_future_quizzes"] = len(context["future_quizzes"])
+    except:
+        return redirect("/")
         
     return render(request, "user-dashboard.html", context)
 
@@ -229,12 +231,14 @@ def single_slug(request, single_slug):
                             answers_correct = real_answers & answers_written
                             answers_wrong = len(answers_written - answers_correct)
                             answers_correct = len(answers_correct)
-                            score += (answers_correct - answers_wrong)/len(real_answers)
+                            if answers_wrong == 0 and answers_correct == len(real_answers):
+                                score += 1
+
 
                     stemp = None
                     try:
                         stemp = Score.objects.filter(quizid = quiz1).get(qpuser = request.user)
-                        if stemp.score< score:
+                        if stemp.score < score:
                             stemp.score = score
                             stemp.max_score = len(questions)
                             stemp.save()

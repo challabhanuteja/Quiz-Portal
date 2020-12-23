@@ -8,11 +8,11 @@ view test scores
     <h1>You present score is {{present_score}} / {{score.max_score}}</h1>
     {% endif %}
     {% if did_not_wrote %}
-    <h1>You didn't wrote this quiz</h1>
+    <h1>You didn't write this quiz</h1>
     {% else %}
     <h1>You highest score is {{score.score}} / {{score.max_score}}</h1>
     {% endif %}
-    <a href="/user-dashboard">Go back</a>
+    <a href="/user-dashboard">Back</a>
 </div>
 
 {% endblock body %}

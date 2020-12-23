@@ -8,3 +8,5 @@ admin.site.register(Standard)
 admin.site.register(MultipleChoiceQuestion)
 admin.site.register(Score)
 admin.site.register(Captcha)
+admin.site.register(LoggedInUser)
+

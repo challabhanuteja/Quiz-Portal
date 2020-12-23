@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-
 {% block title %}
 home
 {% endblock title %}
 
 {% block body %}
+
 <style>
     .counter {
         background-color: #f5f5f5;
@@ -46,7 +46,8 @@ home
     <div class="row text-center mt-5">
         <div class="col">
             <div class="counter">
-                <i class="fa fa-user fa-5x"></i>
+                <i class="fa fa-users fa-5x" aria-hidden="true"></i>
+                <!-- <i class="fa fa-user fa-5x"></i> -->
                 <h2 class="timer count-title count-number" data-to="{{total_users}}" data-speed="1500"></h2>
                 <p class="count-text ">Total Users</p>
             </div>
@@ -85,9 +86,9 @@ home
         
         <div class="col">
             <div class="counter">
-                <i class="fa fa-question fa-5x"></i>
-                <h2 class="timer count-title count-number" data-to="{{total_questions}}" data-speed="1500"></h2>
-                <p class="count-text ">Total Questions</p>
+                <i class="fas fa-globe fa-5x"></i>
+                <h2 class="timer count-title count-number" data-to="{{total_users_online}}" data-speed="1500"></h2>
+                <p class="count-text ">Total Users Online</p>
             </div>
         </div>
     </div>

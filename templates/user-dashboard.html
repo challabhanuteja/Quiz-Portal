@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 {% block title %}
 dashboard
 {% endblock title %}
@@ -28,7 +29,8 @@ dashboard
                             <div class="card mr-2 mt-2 " style="width: 18rem;">
                                 <div class="card-body">
                                     <h5 class="card-title">{{quiz.name}}</h5>
-                                    <p class="card-text">{{quiz.start_time}} - {{quiz.end_time}}</p>
+                                    <p class="card-text"><span style="color: royalblue;">{{quiz.start_time}}</span> - <span style="color: royalblue;">{{quiz.end_time}}</span></p>
+                                    <p class="card-text"><strong style="color: green;">ends in {{quiz.end_time |naturaltime}}</strong></p>
                                     <p class="card-text fifty-chars">{{quiz.quiz_description}}</p>
                                     {% if user.is_student %}
                                     <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Start</a>
@@ -55,7 +57,8 @@ dashboard
                         <div class="card mr-2 mt-2 " style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">{{quiz.name}}</h5>
-                                <p class="card-text">{{quiz.start_time}} - {{quiz.end_time}}</p>
+                                <p class="card-text"><span style="color: royalblue;">{{quiz.start_time}}</span> - <span style="color: royalblue;">{{quiz.end_time}}</span></p>
+                                <p class="card-text"><strong style="color: green;">starts in {{quiz.start_time |naturaltime}}</strong></p>
                                 <p class="card-text fifty-chars">{{quiz.quiz_description}}</p>
                                 {% comment %} {% if user.is_student %}
                                 <a href="/quiz-{{quiz.pk}}/" class="btn btn-primary mt-1">Start</a>
@@ -82,7 +85,8 @@ dashboard
                         <div class="card mr-2 mt-2 " style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">{{quiz.name}}</h5>
-                                <p class="card-text">{{quiz.start_time}} - {{quiz.end_time}}</p>
+                                <p class="card-text"><span style="color: royalblue;">{{quiz.start_time}}</span> - <span style="color: royalblue;">{{quiz.end_time}}</span></p>
+                                <p class="card-text"><strong style="color: rgb(190, 1, 1);">ended {{quiz.end_time |naturaltime}}</strong></p>
                                 <p class="card-text fifty-chars">{{quiz.quiz_description}}</p>
                                 {% if user.is_student %}
                                 <a href="/view-quiz-scores-{{quiz.pk}}/" class="btn btn-primary mt-1">View Score</a>
