@@ -34,65 +34,129 @@ home
         display: table;
         color: #4ad1e5;
     }
+    .carousel-item{
+        height: 32rem;
+        background-color: #777;
+        color: white;
+        position: relative;   
+    }
+    .ccontainer{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding-bottom: 50px;
+        flex-direction: column;
+    }
+    .overlay-image{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        background-position: center;
+        background-size: cover;
+        opacity: 0.5;
+    }
 </style>
 <link rel="stylesheet" href="../static/css/all.css">
-<div class="container mt-5">
-    <div class="row">
-        <br />
-        <div class="col text-center">
-            <h2>Home</h2>
+<div style="background-color:#A8D0E6;">
+    <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-interval="8000">
+                <div class="overlay-image"  style="background-image: url(/static/slide-1.jpg);"></div>
+                <div class="container ccontainer">
+                    <h1>Do you want to test your knowledge?</h1>
+                    <p>Create an account on our quiz portal and just create your own quiz or attempt the quizzes created by others.</p>
+                </div>
+            </div>
+            <div class="carousel-item" data-interval="8000">
+                <div class="overlay-image"  style="background-image: url(/static/slide-2.jpg);"></div>
+                <div class="container ccontainer">
+                    
+                    <h1>Do you want to conduct quizzes to your students?</h1>
+                    <p>Create an account on our quiz portal and just create your quizzes and also track the scores of your students. </p>
+                </div>
+            </div>
+            <div class="carousel-item" data-interval="8000">
+                <div class="overlay-image"  style="background-image: url(/static/slide-3.jpg);"></div>
+                <div class="container ccontainer">
+                    <h1>"Everyone loves sport. And everyone loves a quiz."</h1>
+                    <p>- Sue Barker</p>
+                    
+                </div>
+            </div>
         </div>
+        <a href="#myCarousel" class="carousel-control-prev" role="button" data-slide="prev">
+            <span class="sr-only">Previous</span>
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </a>
+        <a href="#myCarousel" class="carousel-control-next" role="button" data-slide="next">
+            <span class="sr-only">Next</span>
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </a>
     </div>
-    <div class="row text-center mt-5">
-        <div class="col">
-            <div class="counter">
-                <i class="fa fa-users fa-5x" aria-hidden="true"></i>
-                <!-- <i class="fa fa-user fa-5x"></i> -->
-                <h2 class="timer count-title count-number" data-to="{{total_users}}" data-speed="1500"></h2>
-                <p class="count-text ">Total Users</p>
+    
+    
+    
+    <div class="container-fluid pb-5">
+        <h1 class="mt-3">Our Users</h1>
+        <div class="row text-center mt-5">
+            <div class="col mt-2">
+                <div class="counter">
+                    <i class="fa fa-users fa-5x" aria-hidden="true"></i>
+                    <h2 class="timer count-title count-number" data-to="{{total_users}}" data-speed="1500"></h2>
+                    <p class="count-text ">Total Users</p>
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="counter">
-                <i class="fas fa-chalkboard-teacher fa-5x"></i>
-                <h2 class="timer count-title count-number" data-to="{{total_teachers}}" data-speed="1500"></h2>
-                <p class="count-text ">Total Teachers</p>
+            <div class="col mt-2">
+                <div class="counter">
+                    <i class="fas fa-chalkboard-teacher fa-5x"></i>
+                    <h2 class="timer count-title count-number" data-to="{{total_teachers}}" data-speed="1500"></h2>
+                    <p class="count-text ">Total Teachers</p>
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="counter">
-                <i class="fas fa-user-graduate fa-5x"></i>
-                <h2 class="timer count-title count-number" data-to="{{total_students}}" data-speed="1500"></h2>
-                <p class="count-text ">Total Students</p>
+            <div class="col mt-2">
+                <div class="counter">
+                    <i class="fas fa-user-graduate fa-5x"></i>
+                    <h2 class="timer count-title count-number" data-to="{{total_students}}" data-speed="1500"></h2>
+                    <p class="count-text ">Total Students</p>
+                </div>
             </div>
+            
         </div>
-        
-    </div>
-    <div class="row text-center mt-5">
-        <div class="col">
-            <div class="counter">
-                <i class="fas fa-school fa-5x"></i>
-                <h2 class="timer count-title count-number" data-to="{{total_schools}}" data-speed="1500"></h2>
-                <p class="count-text ">Total Schools</p>
+        <div class="row text-center mt-2">
+            <div class="col mt-2">
+                <div class="counter">
+                    <i class="fas fa-school fa-5x"></i>
+                    <h2 class="timer count-title count-number" data-to="{{total_schools}}" data-speed="1500"></h2>
+                    <p class="count-text ">Total Schools</p>
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="counter">
-                <i class="fas fa-file-alt fa-5x"></i>
-                <h2 class="timer count-title count-number" data-to="{{total_quizzes}}" data-speed="1500"></h2>
-                <p class="count-text ">Total Quizzes</p>
+            <div class="col mt-2">
+                <div class="counter">
+                    <i class="fas fa-file-alt fa-5x"></i>
+                    <h2 class="timer count-title count-number" data-to="{{total_quizzes}}" data-speed="1500"></h2>
+                    <p class="count-text ">Total Quizzes</p>
+                </div>
             </div>
-        </div>
-        
-        <div class="col">
-            <div class="counter">
-                <i class="fas fa-globe fa-5x"></i>
-                <h2 class="timer count-title count-number" data-to="{{total_users_online}}" data-speed="1500"></h2>
-                <p class="count-text ">Total Users Online</p>
+            
+            <div class="col mt-2">
+                <div class="counter">
+                    <i class="fas fa-globe fa-5x"></i>
+                    <h2 class="timer count-title count-number" data-to="{{total_users_online}}" data-speed="1500"></h2>
+                    <p class="count-text ">Total Users Online</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <script src="../static/js/jquery.min.js"></script>
 <script>
     (function ($) {
