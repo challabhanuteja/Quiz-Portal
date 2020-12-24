@@ -26,7 +26,7 @@ dashboard
                 <h3 class="mt-4">Present Quizzes</h3>
                 <div class="d-flex flex-wrap">
                         {% for quiz in present_quizzes %}
-                            <div class="card mr-2 mt-2 " style="width: 18rem;">
+                            <div class="card mr-2 mt-2 " style="width: 18rem; background-color: rgb(198, 236, 223);">
                                 <div class="card-body">
                                     <h5 class="card-title">{{quiz.name}}</h5>
                                     <p class="card-text"><span style="color: royalblue;">{{quiz.start_time}}</span> - <span style="color: royalblue;">{{quiz.end_time}}</span></p>
@@ -54,7 +54,7 @@ dashboard
                 <h3 class="mt-4">Future Quizzes</h3>
                 <div class="d-flex flex-wrap">
                     {% for quiz in future_quizzes %}
-                        <div class="card mr-2 mt-2 " style="width: 18rem;">
+                        <div class="card mr-2 mt-2 " style="width: 18rem;background-color: rgb(198, 236, 223);">
                             <div class="card-body">
                                 <h5 class="card-title">{{quiz.name}}</h5>
                                 <p class="card-text"><span style="color: royalblue;">{{quiz.start_time}}</span> - <span style="color: royalblue;">{{quiz.end_time}}</span></p>
@@ -82,7 +82,7 @@ dashboard
                 <h3 class="mt-4">Ended Quizzes</h3>
                 <div class="d-flex flex-wrap">
                     {% for quiz in ended_quizzes %}
-                        <div class="card mr-2 mt-2 " style="width: 18rem;">
+                        <div class="card mr-2 mt-2 " style="width: 18rem;background-color: rgb(198, 236, 223);">
                             <div class="card-body">
                                 <h5 class="card-title">{{quiz.name}}</h5>
                                 <p class="card-text"><span style="color: royalblue;">{{quiz.start_time}}</span> - <span style="color: royalblue;">{{quiz.end_time}}</span></p>
