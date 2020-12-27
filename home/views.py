@@ -140,7 +140,10 @@ def contactUs(request):
     return render(request, "contact-us.html")
 
 def userAccount(request):
-    return render(request, "user-account.html")
+    schools = School.objects.all()
+    context= {}
+    context["schools"] = schools
+    return render(request, "user-account.html", context)
 
 def userDashboard(request):
     context  = {}
@@ -169,12 +172,12 @@ def editUserAcc(request):
         fname = request.POST.get("fname")
         lname = request.POST.get("lname")
         gender = request.POST.get("gender")
-        school = request.POST.get("school_id")
-        section = request.POST.get("section_id")
+        school = request.POST.get("school")
+        section = request.POST.get("section")
         idno = request.POST.get("idno")
         email = request.POST.get("email")
         mobile_no = request.POST.get(" mobile_number")
-        standard_id = request.POST.get("standard_id")
+        standard_id = request.POST.get("standard")
         user= request.user
         user.first_name = fname
         user.last_name = lname
@@ -186,8 +189,26 @@ def editUserAcc(request):
         user.save()
         messages.success(request, "Your details are updated successfully")
         return redirect("/user-account/")
-        
-    return render(request, "edit-user-account.html", context = {"user": request.user})
+    schools = School.objects.all()
+    context=  {"user": request.user}
+    context["schools"] = schools
+    standards = Standard.objects.all()
+    context["standards"] = standards
+    # standards_with_school_ids = dict()
+    # for i in standards:
+    #     if standards_with_school_ids.get(i.school.pk) == None:
+    #         standards_with_school_ids[i.school.pk] = [i]
+    #     else:
+    #         standards_with_school_ids[i.school.pk].append(i)
+    sections = Section.objects.all()
+    # sections_with_school_names = {}
+    # for i in sections:
+    #     if sections_with_school_names.get(i.school.school_name):
+    #         sections_with_school_names[i.school.school_name] = [i]
+    #     else:
+    #         sections_with_school_names[i.school.school_name].append(i)
+    context["sections"] = sections
+    return render(request, "edit-user-account.html", context)
 def file_is_valid_mcq(input_file):
     
     file_name = input_file.name.split(".")
@@ -255,11 +276,11 @@ def single_slug(request, single_slug):
                 if len(questions) != 0:
                     return render(request, "write_quiz.html", context)
                 else:
-                    return HttpResponse("Quiz is not ready yet")
+                    return print_message(request, "Quiz is not ready yet")
             else:
-                return HttpResponse("Quiz is not ready yet or got expired")
+                return print_message(request,"Quiz is not ready yet or got expired")
         else:
-            return HttpResponse("This quiz is not for your standard")
+            return print_message(request,"This quiz is not for your standard")
             
     elif temp_q[0] == 'add':
         if request.method == "POST":
@@ -335,7 +356,31 @@ def single_slug(request, single_slug):
         entry= Quiz.objects.get(pk = int(temp_q[2]))
         entry.delete()
         return render(request, "delete-quiz.html")
-    return HttpResponse("Quiz is not ready yet")
+    elif temp_q[0] == "download" and temp_q[1] == "prev" and temp_q[2] == "quiz" and temp_q[3] == "questions":
+        quiz_qs = MultipleChoiceQuestion.objects.filter(quiz = Quiz.objects.get(pk=int(temp_q[4]))).order_by('question_no')
+        if len(quiz_qs) == 0:
+            return print_message(request, "your quiz is empty")
+        else:
+            output = []
+            response = HttpResponse (content_type='text/csv')
+            response["Content-Disposition"] = 'attachment; filename = "quiz.csv"'
+            writer = csv.writer(response)            
+            writer.writerow(['question no', 'question', 'option 1', 'option 2', 'option 3', 'option 4', 'answer (in case of multi answer separate answers with " ~ "(space+ "~" +  space))', 'Is Multiple answer? (Y/N)'])
+            for question in quiz_qs :
+                output.append([question.question_no, question.question, question.option1, question.option2, question.option3, question.option4, question.answer, question.is_multiple_ans])
+            #CSV Data
+            writer.writerows(output)
+            return response
+    elif temp_q[0] == "view" and temp_q[1] == "quiz":
+        quiz = Quiz.objects.get(pk=int(temp_q[2]))
+        quiz_qs = MultipleChoiceQuestion.objects.filter(quiz = quiz).order_by('question_no')
+        for i in range(len(quiz_qs)):
+            quiz_qs[i].answer = quiz_qs[i].answer.replace(" ~ ", ", ") 
+        return render(request,"view-quiz.html", context={"quiz" : quiz, "questions" : quiz_qs})
+
+    return print_message(request, "Quiz is not ready yet")
+
+    
 
 def get_bootstrap_format(x):
     y = str(x.year)+"-"+x.strftime("%m")+"-"+x.strftime("%d")+"T"+x.strftime("%H")+":"+x.strftime("%M")
@@ -395,3 +440,6 @@ def create_new_quiz(request):
             messages.warning(request, "fill all the required details correctly") 
     return render(request, "create-new-quiz.html", context)
 
+def print_message(request, message):
+    context = {"message": message}
+    return render(request, "print-message.html", context)

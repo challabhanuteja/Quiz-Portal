@@ -19,6 +19,7 @@ urlpatterns = [
     path('user-dashboard/', views.userDashboard, name="userDashboard"),
     path('edit-user-account/', views.editUserAcc, name="editUserAcc"),
     path('create-new-quiz/', views.create_new_quiz, name = "create_new_quiz"),
+    path('print-message/', views.print_message, name = "print-message"),
     path('<single_slug>/', views.single_slug, name="single_slug"),
     url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
     url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),

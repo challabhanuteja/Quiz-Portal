@@ -4,10 +4,6 @@ user account
 {% endblock title %}
 {% block body %}
 <div class="container my-5">
-    <div class="d-flex flex-column justify-content-center align-items-center">
-        <img src="/static/profile_pic.jpg" class="rounded mx-auto d-block">
-        <a class="btn btn-primary mt-1" href="#" role="button">Change Profile Pic</a>
-    </div>
     <form method="post" action = "/edit-user-account/">
     {% csrf_token %}
         <div class="form-group">
@@ -58,15 +54,30 @@ user account
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">School Id</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_id" required value={{user.school.pk}} >
+            <!-- <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_id" required value={{user.school.pk}} > -->
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="school" name = "school" required value="{{user.school.pk}}" onchange="changeStandardDropDown()">
+                {% for school in schools %}
+                    <option value="{{school.pk}}">{{school.school_name}}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Standard Id</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "standard_id" required value={{user.standard.pk}} >
+            <!-- <input type="text" class="form-control" id="formGroupExampleInput3" name = "standard_id" required value={{user.standard.pk}} > -->
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="standard" name = "standard" required value="{{user.standard.pk}}">
+                {% for standard in standards %}
+                    <option value="{{standard.pk}}">{{standard.school.school_name}} - {{standard.standard_name}}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Section Id</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "section_id" required value={{user.section.pk}} >
+            <!-- <input type="text" class="form-control" id="formGroupExampleInput3" name = "section_id" required value={{user.section.pk}} > -->
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="section" name = "section" required value="{{user.section.pk}}">
+                {% for section in sections %}
+                    <option value="{{section.pk}}">{{section.standard.school.school_name}} - {{section.standard.standard_name}} - {{section.section_name}}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">ID Number</label>
@@ -109,4 +120,13 @@ user account
     
 </div>
 {% endblock body %}
+
+<script>
+    // function changeStandardDropDown()
+    // {
+    //     let school_id = document.getElementById("schoool").value;
+    //     document.getElementById('standard').innerHTML = ``;
+    // }
+</script>
+
 </html>

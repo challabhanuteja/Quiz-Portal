@@ -21,7 +21,15 @@ add questions
             <li class="list-group-item">4) If you are "Please upload a valid file according to the instructions given above" error then you might have not followed some of the instructions correctly</li>
             <li class="list-group-item">5) If your questions are not inserted correctly simply correct the mistakes in the excel file and upload it again to overwrite previous questions.</li>
         </ul>
-        <button type="submit mt-5">Submit</button>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary mt-1">Submit</button>
+            <a class="btn btn-primary mt-1" href="/download-prev-quiz-questions-{{quiz_id}}/">Download Previous Quiz Questions</a>
+            <a class="btn btn-primary mt-1" href="/view-quiz-{{quiz_id}}/">View Quiz</a>
+            <a class="btn btn-primary mt-1" href="/user-dashboard/">Back</a>
+        </div>
+           
+        </div>
+        
         {% if messages %}
         {% for message in messages %}
         <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">

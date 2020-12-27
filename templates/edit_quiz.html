@@ -5,7 +5,7 @@ Edit Quiz
 {% block body %}
 <div class="content my-5 d-flex flex-column justify-content-center align-items-center">
     <h1>Edit Quiz</h1>
-    <form class="container flex-column justify-content-center align-items-center" form action="/edit-quiz-{{quiz.pk}}/" method="post"> 
+    <form class="container flex-column justify-content-center align-items-center" form action="/edit-quiz-{{quiz.pk}}/" method="post" onsubmit="return checkStartAndEndTimes()"> 
         {% csrf_token %}
         <div class="form-group row w-100 mt-5">
             <label for="quiz-name" class="col-2 col-form-label"><strong>Quiz Name</strong></label>
@@ -21,13 +21,13 @@ Edit Quiz
         <div class="form-group row mt-2">
             <label for="example-datetime-local-input1" class="col-2 col-form-label"><strong>Start Time</strong></label>
             <div class="col-10">
-              <input class="form-control" type="datetime-local" value="{{start_time}}" id="start_time" name = "start_time" onchange="checkStartAndEndTimes()" required>
+              <input class="form-control" type="datetime-local" value="{{start_time}}" id="start_time" name = "start_time" required>
             </div>
         </div>
         <div class="form-group row mt-2">
             <label for="example-datetime-local-input2" class="col-2 col-form-label"><strong>End Time</strong></label>
             <div class="col-10">
-              <input class="form-control" type="datetime-local" value="{{end_time}}" id="end_time" name = "end_time" onchange="checkStartAndEndTimes()" required>
+              <input class="form-control" type="datetime-local" value="{{end_time}}" id="end_time" name = "end_time" required>
             </div>
         </div>
         <div class="form-group">
@@ -44,7 +44,7 @@ Edit Quiz
             
         </select>
         </div>
-        <button type="submit mt-5" class = "btn btn-primary">Submit</button>
+        <button type="submit" class = "btn btn-primary">Save</button>
         <a class = "btn btn-primary" id = "delete_quiz" onclick="deleteQuiz()">Delete Quiz<a>
         <a href="/user-dashboard" class = "btn btn-primary">Back<a>
     </form>  
@@ -76,10 +76,31 @@ function checkDuration(){
     }
 }
 function checkStartAndEndTimes(){
-    let st = document.getElementsByName("start_time").value;
-    let et = document.getElementsByName("end_time").value;
-    console.log(st);
-    console.log(et);
+    let st = document.getElementById("start_time").value;
+    let et = document.getElementById("end_time").value;
+    let t = st.split("T");
+    let t1 = t[0].split("-");
+    let t2 = t[1].split(":");
+    let std = new Date(parseInt(t1[0]),parseInt(t1[1])-1,parseInt(t1[2]),parseInt(t2[0]),parseInt(t2[1]));
+    t = et.split("T");
+    t1 = t[0].split("-");
+    t2 = t[1].split(":");
+    let etd = new Date(parseInt(t1[0]),parseInt(t1[1])-1,parseInt(t1[2]),parseInt(t2[0]),parseInt(t2[1]));
+
+    if(std>=etd)
+    {
+        if(event.preventDefault){
+            event.preventDefault();
+        }
+        else
+        {
+            event.returnValue = false;
+        }
+        alert("Enter valid start time and end time")
+        document.getElementById("start_time").value = "";
+        document.getElementById("end_time").value = "";
+    }
+    return true;
 }
 
 

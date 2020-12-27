@@ -4,10 +4,6 @@ user account
 {% endblock title %}
 {% block body %}
 <div class="container my-5">
-    <!-- <div class="d-flex flex-column justify-content-center align-items-center">
-        <img src="/static/profile_pic.jpg" class="rounded mx-auto d-block">
-        <a class="btn btn-primary mt-1" href="#" role="button">Change Profile Pic</a>
-    </div> -->
     <form>
         <div class="form-group">
             <label for="formGroupExampleInput">First Name</label>
@@ -57,15 +53,26 @@ user account
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">School Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value={{user.school.school_name}} disabled = true>
+            <!-- <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value={{user.school.school_name}} disabled = true> -->
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="school" name = "school" required value="{{user.school.pk}}" disabled = true>
+                {% for school in schools %}
+                    <option value="{{user.school.pk}}">{{user.school.school_name}}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Standard Id</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "standard_id" required value={{user.standard.pk}} disabled = true>
+            <!-- <input type="text" class="form-control" id="formGroupExampleInput3" name = "standard_id" required value={{user.standard.pk}} > -->
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="standard" name = "standard" required value="{{user.standard.pk}}"  disabled = true>
+                <option value="{{user.standard.pk}}">{{user.standard.school.school_name}} - {{user.standard.standard_name}}</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">Section Id</label>
-            <input type="text" class="form-control" id="formGroupExampleInput3" name = "school_name" required value={{user.section.pk}} disabled = true>
+            <!-- <input type="text" class="form-control" id="formGroupExampleInput3" name = "section_id" required value={{user.section.pk}} > -->
+            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="section" name = "section" required value="{{user.section.pk}}"  disabled = true>
+                <option value="{{user.section.pk}}">{{user.section.standard.school.school_name}} - {{user.section.standard.standard_name}} - {{user.section.section_name}}</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">ID Number</label>
