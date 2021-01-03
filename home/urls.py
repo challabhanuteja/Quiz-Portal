@@ -20,7 +20,9 @@ urlpatterns = [
     path('edit-user-account/', views.editUserAcc, name="editUserAcc"),
     path('create-new-quiz/', views.create_new_quiz, name = "create_new_quiz"),
     path('print-message/', views.print_message, name = "print-message"),
+    path('my-flashcards/', views.my_flashcards, name = "my-flashcards"),
+    path('create-new-flashcards/', views.create_new_flashcards, name = "create-new-flashcards"),
+    path('download-flashcard-template/', views.download_flashcard_template, name = "download-flashcard-template"),
+    path('download-mcq-template/', views.download_mcq_template, name = "download-mcq-template"),
     path('<single_slug>/', views.single_slug, name="single_slug"),
-    url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
-    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]

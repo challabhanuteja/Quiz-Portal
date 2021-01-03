@@ -9,4 +9,6 @@ admin.site.register(MultipleChoiceQuestion)
 admin.site.register(Score)
 admin.site.register(Captcha)
 admin.site.register(LoggedInUser)
+admin.site.register(FlashcardGroup)
+admin.site.register(Flashcard)
 

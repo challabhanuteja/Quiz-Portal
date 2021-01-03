@@ -11,6 +11,8 @@ import pandas as pd
 import os
 from random import randint
 import csv
+from django.utils.encoding import smart_str
+import xlsxwriter
 def index(request):
     context = {}
     context["total_users"] = QPUser.objects.all().count()
@@ -361,15 +363,33 @@ def single_slug(request, single_slug):
         if len(quiz_qs) == 0:
             return print_message(request, "your quiz is empty")
         else:
-            output = []
-            response = HttpResponse (content_type='text/csv')
-            response["Content-Disposition"] = 'attachment; filename = "quiz.csv"'
-            writer = csv.writer(response)            
-            writer.writerow(['question no', 'question', 'option 1', 'option 2', 'option 3', 'option 4', 'answer (in case of multi answer separate answers with " ~ "(space+ "~" +  space))', 'Is Multiple answer? (Y/N)'])
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename="previous_quiz.xlsx"'
+
+            wb = xlsxwriter.Workbook(response)
+            ws = wb.add_worksheet('Sheet 1')
+            bold = wb.add_format({'bold': True})
+            row_num = 0
+
+            columns = ['question no', 'question', 'option 1', 'option 2', 'option 3', 'option 4', 'answer (in case of multi answer separate answers with " ~ "(space+ "~" +  space)', 'Is Multiple answer? (Y/N)']
+
+            for col_num in range(len(columns)):
+                ws.write(row_num, col_num, columns[col_num], bold)
+                ws.set_column(col_num,col_num+1, 20)
+            ws.set_column(6,7, 70)
+            ws.set_column(7,8, 25)
             for question in quiz_qs :
-                output.append([question.question_no, question.question, question.option1, question.option2, question.option3, question.option4, question.answer, question.is_multiple_ans])
-            #CSV Data
-            writer.writerows(output)
+                row_num += 1
+                ws.write(row_num, 0, question.question_no)
+                ws.write(row_num, 1,  question.question)
+                ws.write(row_num, 2, question.option1)
+                ws.write(row_num, 3, question.option2)
+                ws.write(row_num, 4, question.option3)
+                ws.write(row_num, 5, question.option4)
+                ws.write(row_num, 6, question.answer)
+                ws.write(row_num, 7, question.is_multiple_ans)
+                
+            wb.close()
             return response
     elif temp_q[0] == "view" and temp_q[1] == "quiz":
         quiz = Quiz.objects.get(pk=int(temp_q[2]))
@@ -377,6 +397,12 @@ def single_slug(request, single_slug):
         for i in range(len(quiz_qs)):
             quiz_qs[i].answer = quiz_qs[i].answer.replace(" ~ ", ", ") 
         return render(request,"view-quiz.html", context={"quiz" : quiz, "questions" : quiz_qs})
+    
+    elif temp_q[0] == 'start' and temp_q[1] == 'flashcards':
+        fcg = FlashcardGroup.objects.get(pk = temp_q[2])
+        flashcards = Flashcard.objects.filter(flash_card_group = fcg)
+        context = {"flashcards" : flashcards, "no_of_flashcards" : flashcards.count(), "flashcards_name" : fcg.name}
+        return render(request, "start-flashcards.html", context)
 
     return print_message(request, "Quiz is not ready yet")
 
@@ -390,15 +416,27 @@ def view_quiz_score(request, context):
     if request.user.is_teacher:
         if request.method == "POST":
             items = context["scores"]
-            response = HttpResponse(content_type = 'text/csv')
-            response["Content-Disposition"] = 'attachment; filename = "scores.csv"'
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename="scores.xlsx"'
 
-            writer = csv.writer(response, delimiter= ",")
-            writer.writerow(["#", "ID No", "Name", "Email", "Score", "Max Score"])
+            wb = xlsxwriter.Workbook(response)
+            ws = wb.add_worksheet('Sheet 1')
+            bold = wb.add_format({'bold': True})
+            row_num = 0
+
+            columns = ["#", "ID No", "Name", "Email", "Score", "Max Score"]
+            for col_num in range(len(columns)):
+                ws.write(row_num, col_num, columns[col_num], bold)
+            ws.set_column(2,3, 20)
+            ws.set_column(3,4, 20)
+
             x = 1
             for obj in items:
-                writer.writerow([x, obj.qpuser.idno, obj.qpuser.first_name + " "+ obj.qpuser.last_name, obj.qpuser.email, obj.score, obj.max_score])
+                y = [x, obj.qpuser.idno, obj.qpuser.first_name + " "+ obj.qpuser.last_name, obj.qpuser.email, obj.score, obj.max_score]
+                for i in range(len(columns)):
+                    ws.write(x,i,y[i])
                 x+=1
+            wb.close()
             return response
         return render(request, "view-quiz-scores-teacher.html", context = context)
     else:
@@ -443,3 +481,81 @@ def create_new_quiz(request):
 def print_message(request, message):
     context = {"message": message}
     return render(request, "print-message.html", context)
+
+def my_flashcards(request):
+    context = {}
+    flashcards = FlashcardGroup.objects.filter(qpuser = request.user)
+    context['flashcards'] = flashcards
+    return render(request, "my-flashcards.html", context)
+
+def is_flashcard_file_valid(input_file):
+    file_name = input_file.name.split(".")
+    if file_name[1]!="xlsx": #checks the file format
+        return False
+    x = pd.read_excel(input_file, dtype=str)
+    if len(x.columns) != 2: # checks number of columns
+        return False
+    
+    elif(x.iloc[:,0].isnull().sum() + x.iloc[:,1].isnull().sum() != 0): # checks null values
+        return False
+
+    return True
+
+def create_new_flashcards(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        print(name)
+        input_file = request.FILES["input_file"]
+        if is_flashcard_file_valid(input_file):
+            df = pd.read_excel(input_file, dtype=str)
+            flashcard_group = FlashcardGroup()
+            flashcard_group.name = name
+            flashcard_group.qpuser = request.user
+            flashcard_group.save()
+            for i in range(len(df)):
+                question = df.iloc[i,0]
+                answer = df.iloc[i,1]
+                flashcard = Flashcard()
+                flashcard.question = question
+                flashcard.answer = answer
+                flashcard.flash_card_group = flashcard_group
+                flashcard.save()
+
+        else:
+            messages.warning(request, 'Invalid file')
+                    
+    return render(request, "create-new-flashcards.html")
+def download_flashcard_template(request):
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="flashcard_template.xlsx"'
+
+    wb = xlsxwriter.Workbook(response)
+    ws = wb.add_worksheet('Sheet 1')
+    bold = wb.add_format({'bold': True})
+    row_num = 0
+
+    columns = ['question', 'answer']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], bold)
+
+    wb.close()
+    return response
+
+def download_mcq_template(request):
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="mcq_template.xlsx"'
+
+    wb = xlsxwriter.Workbook(response)
+    ws = wb.add_worksheet('Sheet 1')
+    bold = wb.add_format({'bold': True})
+    row_num = 0
+
+    columns = ['question no', 'question', 'option 1', 'option 2', 'option 3', 'option 4', 'answer (in case of multi answer separate answers with " ~ "(space+ "~" +  space)', 'Is Multiple answer? (Y/N)']
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], bold)
+        ws.set_column(col_num,col_num+1, 20)
+    ws.set_column(6,7, 70)
+    ws.set_column(7,8, 25)
+    wb.close()
+    return response

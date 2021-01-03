@@ -7,11 +7,11 @@ add questions
     <form method="POST" action="/add-questions-{{quiz_id}}/" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
-            <label for="exampleFormControlFile1">Please download <a
-                    href="https://drive.google.com/file/d/16KOL0Y2p4jUOyOIpi379eQod5VBi1Jeb/view?usp=sharing"
+            <label for="exampleFormControlFile1"><h5>Please download <a
+                    href="/download-mcq-template/"
                     target="_blank">this excel sheet</a> and fill it with your questions and answers then submit the
-                same. It should not contain any blank boxes in any row.</label>
-            <input type="file" class="form-control-file" id="exampleFormControlFile1" name="input_file" accept=".xlsx"> 
+                same. It should not contain any blank boxes in any row.</h5></label>
+            <input type="file" class="form-control-file" id="exampleFormControlFile1" name="input_file" accept=".xlsx" required> 
         </div>
         <h3>Instructions for filling the excel sheet </h3>
         <ul class="list-group">

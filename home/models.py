@@ -75,3 +75,12 @@ class LoggedInUser(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class FlashcardGroup(models.Model):
+    name = models.CharField(max_length=50)
+    qpuser = models.ForeignKey(QPUser, verbose_name="QPUser", on_delete=models.CASCADE)
+
+class Flashcard(models.Model):
+    flash_card_group = models.ForeignKey(FlashcardGroup, verbose_name= "Flashcard Group", on_delete=models.CASCADE)
+    question = models.TextField()
+    answer = models.TextField()

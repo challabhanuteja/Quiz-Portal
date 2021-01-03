@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}
+Start Flashcards
+{% endblock title %}
+{% block body %}
+<style>
+    .flashcards {
+        height: 30rem;
+        width: 50rem;
+        background-color: transparent;
+        
+    }
+
+    .flashcard {
+        height: 100%;
+        width: 100%;
+    }
+
+    /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+    .flip-card {
+        background-color: transparent;
+        height: 85vh;
+        border: 1px solid #f1f1f1;
+    }
+
+    /* This container is needed to position the front and back side */
+    .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+
+    /* Do an horizontal flip when you move the mouse over the flip box container */
+    .flip-card:active .flip-card-inner {
+        transform: rotateY(-180deg);
+    }
+
+    /* Position the front and back side */
+    .flip-card-front,
+    .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        /* Safari */
+        backface-visibility: hidden;
+    }
+
+    /* Style the front side (fallback if image is missing) */
+    .flip-card-front {
+        background-color: #bbb;
+        color: black;
+        {% comment %} display: flex;
+        align-items: center;
+        justify-content: center; {% endcomment %}
+    }
+
+    /* Style the back side */
+    .flip-card-back {
+        background-color: dodgerblue;
+        color: white;
+        transform: rotateY(-180deg);
+        {% comment %} display: flex;
+        align-items: center;
+        justify-content: center; {% endcomment %}
+    }
+
+    h5{
+        font-size: 3vw;
+    }
+    
+</style>
+
+<div class="container">
+    <h1 style="text-align : center;">{{flashcards_name}}</h1>    
+    <div id="carouselExampleIndicators" class="carousel slide flashcard" data-ride="carousel"
+        data-interval="false">
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            {% for i in flashcards %}
+                <li data-target="#carouselExampleIndicators" data-slide-to = {{ forloop.counter }} ></li>
+            {% endfor %}  
+        </ol>
+        
+        <div class="carousel-inner">
+            {% for flashcard in flashcards %}
+                {% if forloop.counter == 1 %}
+                    <div class="carousel-item active">
+                        <div class="flip-card d-flex justify-content-center align-items-center">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front d-flex justify-content-center align-items-center">
+                                    <h5 class = "flashcard_text">{{flashcard.question}}</h5>
+                                </div>
+                                <div class="flip-card-back d-flex justify-content-center align-items-center">
+                                    <h5 class = "flashcard_text">{{flashcard.answer}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align : center">{{ forloop.counter }}</p>
+                    </div>
+                {% else %}
+                    <div class="carousel-item">
+                        <div class="flip-card d-flex justify-content-center align-items-center">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front d-flex justify-content-center align-items-center">
+                                    <h5 class = "flashcard_text">{{flashcard.question}}</h5>
+                                </div>
+                                <div class="flip-card-back d-flex justify-content-center align-items-center">
+                                    <h5 class = "flashcard_text">{{flashcard.answer}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align : center">{{ forloop.counter }}</p>
+                    </div>
+                    
+                {% endif %}
+
+        {% endfor %}  
+    
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
+
+
+{% endblock body %}
