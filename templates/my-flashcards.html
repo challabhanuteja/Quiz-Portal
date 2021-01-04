@@ -6,19 +6,17 @@ Flashcards
 <div class="container-fluid">
     <a href="/create-new-flashcards/" class="btn btn-primary mt-4">Create new flashcards</a>
     <h1>My Flashcards</h1>
-    {% for flashcard in flashcards %}
-    <div class="card mr-2 mt-2 " style="width: 18rem; background-color: rgb(198, 236, 223);">
-        <div class="card-body">
-            
-            <h5 class="card-title">{{flashcard.name}}</h5>
-            <a href="/start-flashcards-{{flashcard.pk}}/" class="btn btn-primary mt-1">Start</a>
-            <a href="/change-flashcards-{{flashcard.pk}}/" class="btn btn-primary mt-1">Change Questions</a>
-            <a href="/delete-flashcards-{{flashcard.pk}}/" class="btn btn-primary mt-1">Delete</a>
-            
+    <div class=" d-flex flex-row">
+        {% for flashcard in flashcards %}
+        <div class="card mr-2 mt-2" style="width: 18rem; background-color: rgb(198, 236, 223);">
+            <div class="card-body">
+                <h5 class="card-title">{{flashcard.name}}</h5>
+                <a href="/start-flashcards-{{flashcard.pk}}/" class="btn btn-primary mt-1">Start</a>
+                <a href="/delete-flashcards-{{flashcard.pk}}/" class="btn btn-primary mt-1" onclick="return confirm('Do you really want to delete these flashcards permanently?');">Delete</a>
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
-
 
 {% endblock body %}

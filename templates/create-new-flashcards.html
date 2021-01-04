@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}
-Create Flashcards
+{{Title}}
 {% endblock title %}
 {% block body %}
 <div class="container mt-4">
-    <h1>Create New Falshcards</h1>
+    <h1>{{Title}}</h1>
     <h5>First download this <a href="/download-flashcard-template/">excel file</a> and fill the questions and answers to be uploaded.</h5>
     <form method = "POST" action="/create-new-flashcards/" class="mt-4"  enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
             <label for="formGroupExampleInput">Name</label>
-            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Name of the flashcards" name="name"  required>
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Name of the flashcards" name="name"  required value="{{flashcards_name}}">
         </div>
         <div class="form-group">
             <label for="exampleFormControlFile1">Upload your file here</label>
@@ -27,6 +27,7 @@ Create Flashcards
             {% endfor %}
         {% endif %}
         <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="/my-flashcards/" class="btn btn-primary mt-1">Back</a>
     </form>
     
 </div>

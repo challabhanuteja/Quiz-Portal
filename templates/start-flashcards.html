@@ -33,10 +33,7 @@ Start Flashcards
         transform-style: preserve-3d;
     }
 
-    /* Do an horizontal flip when you move the mouse over the flip box container */
-    .flip-card:active .flip-card-inner {
-        transform: rotateY(-180deg);
-    }
+    
 
     /* Position the front and back side */
     .flip-card-front,
@@ -53,9 +50,6 @@ Start Flashcards
     .flip-card-front {
         background-color: #bbb;
         color: black;
-        {% comment %} display: flex;
-        align-items: center;
-        justify-content: center; {% endcomment %}
     }
 
     /* Style the back side */
@@ -63,18 +57,23 @@ Start Flashcards
         background-color: dodgerblue;
         color: white;
         transform: rotateY(-180deg);
-        {% comment %} display: flex;
-        align-items: center;
-        justify-content: center; {% endcomment %}
     }
+    
 
-    h5{
-        font-size: 3vw;
+    @media screen and (max-width: 600px) {
+        h5{
+            font-size: 4vh;
+        }
+    }
+    @media screen and (min-width: 600px) {
+        h5{
+            font-size: 4vh;
+        }
     }
     
 </style>
 
-<div class="container">
+<div class="container mb-5" id = "flashcards">
     <h1 style="text-align : center;">{{flashcards_name}}</h1>    
     <div id="carouselExampleIndicators" class="carousel slide flashcard" data-ride="carousel"
         data-interval="false">
@@ -89,6 +88,7 @@ Start Flashcards
             {% for flashcard in flashcards %}
                 {% if forloop.counter == 1 %}
                     <div class="carousel-item active">
+                    <p style="text-align : center">{{ forloop.counter }}/{{no_of_flashcards}}</p>
                         <div class="flip-card d-flex justify-content-center align-items-center">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front d-flex justify-content-center align-items-center">
@@ -99,10 +99,10 @@ Start Flashcards
                                 </div>
                             </div>
                         </div>
-                        <p style="text-align : center">{{ forloop.counter }}</p>
                     </div>
                 {% else %}
                     <div class="carousel-item">
+                    <p style="text-align : center">{{ forloop.counter }}/{{no_of_flashcards}}</p>
                         <div class="flip-card d-flex justify-content-center align-items-center">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front d-flex justify-content-center align-items-center">
@@ -113,7 +113,6 @@ Start Flashcards
                                 </div>
                             </div>
                         </div>
-                        <p style="text-align : center">{{ forloop.counter }}</p>
                     </div>
                     
                 {% endif %}
@@ -131,6 +130,5 @@ Start Flashcards
         </a>
     </div>
 </div>
-
-
+<span>(click on the flashcard to fip it)</span>
 {% endblock body %}

@@ -278,11 +278,11 @@ def single_slug(request, single_slug):
                 if len(questions) != 0:
                     return render(request, "write_quiz.html", context)
                 else:
-                    return print_message(request, "Quiz is not ready yet")
+                    return print_message(request, "Quiz is not ready yet", '/user-dashboard/')
             else:
-                return print_message(request,"Quiz is not ready yet or got expired")
+                return print_message(request,"Quiz is not ready yet or got expired", '/user-dashboard/')
         else:
-            return print_message(request,"This quiz is not for your standard")
+            return print_message(request,"This quiz is not for your standard", '/user-dashboard/')
             
     elif temp_q[0] == 'add':
         if request.method == "POST":
@@ -361,7 +361,7 @@ def single_slug(request, single_slug):
     elif temp_q[0] == "download" and temp_q[1] == "prev" and temp_q[2] == "quiz" and temp_q[3] == "questions":
         quiz_qs = MultipleChoiceQuestion.objects.filter(quiz = Quiz.objects.get(pk=int(temp_q[4]))).order_by('question_no')
         if len(quiz_qs) == 0:
-            return print_message(request, "your quiz is empty")
+            return print_message(request, "your quiz is empty", '/user-dashboard/')
         else:
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename="previous_quiz.xlsx"'
@@ -403,8 +403,12 @@ def single_slug(request, single_slug):
         flashcards = Flashcard.objects.filter(flash_card_group = fcg)
         context = {"flashcards" : flashcards, "no_of_flashcards" : flashcards.count(), "flashcards_name" : fcg.name}
         return render(request, "start-flashcards.html", context)
-
-    return print_message(request, "Quiz is not ready yet")
+    
+    elif temp_q[0] == 'delete' and temp_q[1] == "flashcards":
+        FlashcardGroup.objects.get(pk = temp_q[2]).delete()
+        return print_message(request, "Flashcard is deleted successfully", '/my-flashcards/')
+    
+    return print_message(request, "Page is not ready yet", '/user-dashboard/')
 
     
 
@@ -478,8 +482,8 @@ def create_new_quiz(request):
             messages.warning(request, "fill all the required details correctly") 
     return render(request, "create-new-quiz.html", context)
 
-def print_message(request, message):
-    context = {"message": message}
+def print_message(request, message, back_address):
+    context = {"message": message, "back_address": back_address}
     return render(request, "print-message.html", context)
 
 def my_flashcards(request):
@@ -502,9 +506,9 @@ def is_flashcard_file_valid(input_file):
     return True
 
 def create_new_flashcards(request):
+    context = {"Title": "Create New Flashcards"}
     if request.method == 'POST':
         name = request.POST['name']
-        print(name)
         input_file = request.FILES["input_file"]
         if is_flashcard_file_valid(input_file):
             df = pd.read_excel(input_file, dtype=str)
@@ -520,11 +524,11 @@ def create_new_flashcards(request):
                 flashcard.answer = answer
                 flashcard.flash_card_group = flashcard_group
                 flashcard.save()
-
+            messages.success(request, 'Flashcards created successfully')
         else:
             messages.warning(request, 'Invalid file')
                     
-    return render(request, "create-new-flashcards.html")
+    return render(request, "create-new-flashcards.html", context)
 def download_flashcard_template(request):
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="flashcard_template.xlsx"'

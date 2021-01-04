@@ -8,24 +8,6 @@
     <title>{% block title %} {% endblock title %}</title>
   </head>
   <body style="background: #b9daf1;">
-    <!-- <style>
-      .custom-background:hover{
-            color: white;
-            background: linear-gradient(to right,#21ddc7, #50acee);
-            border-color: black;
-        }
-      .custom-background{
-        color:#21ddc7;
-        background-color: #343a40;
-        border: solid 1px;
-        border-image-source: linear-gradient(to right,#21ddc7, #50acee);
-      }
-      .border-gradient {
-        border: 2px solid;
-        border-image-slice: 1;
-        border-width: 2px;
-      }
-    </style> -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="/">Quiz Portal</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,5 +62,25 @@
     <script src="../static/js/jquery.slim.min.js"></script>
     <script src="../static/js/bootstrap.bundle.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $(".flip-card-front").click(function()
+          { 
+            $(".flip-card-inner").css({transform: 'rotateY(-180deg)'});
+          });
+        $(".flip-card-back").click(function()
+          { 
+            $(".flip-card-inner").css({transform: ''});
+          });
+        $(".carousel-control-prev").click(function()
+          { 
+            $(".flip-card-inner").css({transform: ''});
+          });
+        $(".carousel-control-next").click(function()
+          { 
+            $(".flip-card-inner").css({transform: ''});
+          });
+      });
+      </script>
   </body>
 </html>
