@@ -563,3 +563,6 @@ def download_mcq_template(request):
     ws.set_column(7,8, 25)
     wb.close()
     return response
+
+def atlas_quiz(request):
+    return render(request, "atlas-quiz.html")

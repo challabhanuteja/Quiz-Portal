@@ -24,5 +24,6 @@ urlpatterns = [
     path('create-new-flashcards/', views.create_new_flashcards, name = "create-new-flashcards"),
     path('download-flashcard-template/', views.download_flashcard_template, name = "download-flashcard-template"),
     path('download-mcq-template/', views.download_mcq_template, name = "download-mcq-template"),
+    path('atlas-quiz/', views.atlas_quiz, name = "atlas-quiz"),
     path('<single_slug>/', views.single_slug, name="single_slug"),
 ]
