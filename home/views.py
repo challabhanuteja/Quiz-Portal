@@ -13,6 +13,8 @@ from random import randint
 import csv
 from django.utils.encoding import smart_str
 import xlsxwriter
+
+
 def index(request):
     context = {}
     context["total_users"] = QPUser.objects.all().count()
@@ -26,27 +28,39 @@ def index(request):
 
 
 def userLogin(request):
+    # checking if the method of the request is POST
     if request.method == "POST":
+        #Getting the details from the post request
         email = request.POST["email"]
         password = request.POST["password"]
         captcha = request.POST["captcha"]
+        #checking the captcha
         if captcha == Captcha.objects.get(pk = request.session["captcha"]).captcha_input:
+            #authenticating the user
             s = authenticate(username = email,password =  password)
+            # checking if the user exists
             if s !=None:
+                #logging him into his account and redirecting him into dashboard
                 login(request,s)
                 return redirect('/user-dashboard/')
             else:
+                #displaying the waring message as "Invalid username or password" and redirecting him to the login page
                 messages.warning(request, 'Invalid username or password')
                 return redirect("/user-login/")
         else:
+            #if the captcha is incorrect displaying the waring message as 'Invalid captcha' and generating new captcha and storing it in the session
             messages.warning(request, 'Invalid captcha')
             request.session["captcha"] = randint(1,1070)
+            #redirecting the user to login page
             return redirect("/user-login/")
+    #generating a new captcha and storing it in the session
     request.session["captcha"] = randint(1,1070)
+    #getting the image and correct text that should be inserted form the database
     context = {"captcha" : Captcha.objects.get(pk = request.session["captcha"]).captcha_img}
     return render(request, "user-login.html", context)
 def userLogout(request):
     logout(request)
+    #showing success message as "You have been logged out successfully" and redirecting the user to login page
     messages.success(request, 'You have been logged out successfully')
     return redirect("/user-login/")
 
@@ -56,8 +70,11 @@ def createNewAccount(request):
     
 def createStudentAccount(request):
     context ={}
+    # checking if the method of the request is POST
     if request.method == "POST":
+        #creating new QPUser object
         student = QPUser()
+        #Getting the details from the post request and saving them into the new object
         student.first_name = fname = request.POST.get("fname")
         student.last_name = lname = request.POST.get("lname")
         student.gender = gender = request.POST.get("gender")
@@ -76,20 +93,31 @@ def createStudentAccount(request):
         student.username = request.POST.get("email")
         student.date_joined = datetime.today()
         captcha = request.POST["captcha"]
+        #storing the details in the context to sent to the website if the captcha is wrong
         context = {"fname" : fname, "lname" : lname, "gender": gender, "dob" : dob, "school" : school1, "idno": idno, "mobile_number" : mobile_number, "email":email}
+        
+        #checking the captcha
         if captcha == Captcha.objects.get(pk = request.session["captcha"]).captcha_input:
+            #saving the new object if the captcha is correct
             student.save()
             messages.success(request, 'You have been registered successfully')
         else:
+            #displaying the waring message as "Invalid Captcha"
             messages.warning(request, 'Invalid Captcha')
+    #generating a new captcha and storing it in the session
     request.session["captcha"] = randint(1,1070)
+    #getting the image and correct text that should be inserted form the database
     context["captcha"] =  Captcha.objects.get(pk = request.session["captcha"]).captcha_img
     context["schools"] = School.objects.all()
     return render(request, "create-student-account.html", context)  
+
 def createTeacherAccount(request):
     context ={}
+    # checking if the method of the request is POST
     if request.method == "POST":
+        #creating new QPUser object
         teacher = QPUser()
+        #Getting the details from the post request and saving them into the new object
         teacher.first_name = fname = request.POST.get("fname")
         teacher.last_name = lname = request.POST.get("lname")
         teacher.gender = gender = request.POST.get("gender")
@@ -108,13 +136,20 @@ def createTeacherAccount(request):
         teacher.username = request.POST.get("email")
         teacher.date_joined = datetime.today()
         captcha = request.POST["captcha"]
+        #storing the details in the context to sent to the website if the captcha is wrong
         context = {"fname" : fname, "lname" : lname, "gender": gender, "dob" : dob, "school" : school1, "idno": idno, "mobile_number" : mobile_number, "email":email}
+        
+        #checking the captcha
         if captcha == Captcha.objects.get(pk = request.session["captcha"]).captcha_input:
+            #saving the new object if the captcha is correct
             teacher.save()
             messages.success(request, 'You have been registered successfully')
         else:
+            #displaying the waring message as "Invalid Captcha"
             messages.warning(request, 'Invalid Captcha')
+    #generating a new captcha and storing it in the session
     request.session["captcha"] = randint(1,1070)
+    #getting the image and correct text that should be inserted form the database
     context["captcha"] =  Captcha.objects.get(pk = request.session["captcha"]).captcha_img
     context["schools"] = School.objects.all()
     return render(request, "create-teacher-account.html",context)
@@ -122,17 +157,22 @@ def createTeacherAccount(request):
 
 def aboutUs(request):
     return render(request, "about-us.html")
+
 def contactUs(request):
+    # checking if the method of the request is POST
     if request.method == 'POST':
+        #getting details from the post request
         s_email = request.POST.get("sender_email")
         s_name = request.POST.get("sender_name")
         s_message = request.POST.get("message_sent")
+        #sending mail to the database admin
         send_mail(
             subject= s_email+" "+s_name,
             message= s_message,
             from_email= settings.EMAIL_HOST_USER,
             recipient_list=[settings.EMAIL_HOST_USER],
         )
+        #sending acknowledgement mail to the senders email
         send_mail(
             subject= "Acknowledgement for "+s_email+" "+s_name,
             message= s_message,
@@ -454,6 +494,7 @@ def view_quiz_score(request, context):
 def create_new_quiz(request):
     context = dict()
     context["standards"] = Standard.objects.filter(school = request.user.school)
+    
     if request.method == "POST":
         quiz_obj = Quiz()
         q_name = request.POST.get("quiz-name")
