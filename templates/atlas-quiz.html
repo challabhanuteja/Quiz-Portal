@@ -13,6 +13,13 @@ Atlas Quiz
         flex: 50%;
         padding: 5px;
     }
+    #stopwatch{
+        border: 2px solid #212529;
+        padding: 0.3rem;
+    }
+    #known_countries{
+        font-size: 1.5rem;
+    }
 </style>
 <div class="container-fluid">
     <h3>Let's find out how many country names you know!</h3>
@@ -20,10 +27,22 @@ Atlas Quiz
     <input type="text" name="input_place" id="input_place">
     <a href="#" onclick="checkPlace()" class="btn btn-primary" id="next_button">Next</a>
     <a href="#" onclick="seeUnknownCountries()" class="btn btn-primary" id="see_unknow_countries_button">See Unknown Countries</a>
-
+    <div id="try_again"></div>
+    <div class="d-flex justify-content-between">
+        <b id="known_countries">Known Countries : 0</b>
+        <div id="stopwatch">
+            <b id="stopwatch_time">00:00:00</b>
+            <a href="#" id="start" onclick="start()"  class="btn btn-primary btn-sm">start</a>
+            <a href="#" id="pause" onclick="pause()" class="btn btn-primary btn-sm">pause</a>
+            <a href="#" id="reset" onclick="reset()" class="btn btn-primary btn-sm">reset</a>
+            <a href="#" id="hide" onclick="hide_stopwatch()" class="btn btn-primary btn-sm">hide</a>
+        </div>
+        <a href="#" id="unhide" onclick="unhide_stopwatch()" class="btn btn-primary btn-sm" style="display: none;">unhide</a>
+    </div>
+    
     <div id='map' style='width: 95vw; height: 70vh;' class="my-3"></div>
 
-    <h3 id="known_countries">Known Countries : 0</h3>
+    
     <div class="table-responsive">
         <table class="table" oncopy="return false" oncut="return false" onpaste="return false">
             <thead>
@@ -33,6 +52,995 @@ Atlas Quiz
                 </tr>
             </thead>
             <tbody id="countries">
+                <tr>
+                    <th scope="row">1</th>
+                    <td id="AFG" style="background-color : #212529; display:inline;">Afghanistan</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td id="ALB" style="background-color : #212529; display:inline;">Albania</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td id="DZA" style="background-color : #212529; display:inline;">Algeria</td>
+                </tr>
+                <tr>
+                    <th scope="row">4</th>
+                    <td id="ASM" style="background-color : #212529; display:inline;">American Samoa</td>
+                </tr>
+                <tr>
+                    <th scope="row">5</th>
+                    <td id="AND" style="background-color : #212529; display:inline;">Andorra</td>
+                </tr>
+                <tr>
+                    <th scope="row">6</th>
+                    <td id="AGO" style="background-color : #212529; display:inline;">Angola</td>
+                </tr>
+                <tr>
+                    <th scope="row">7</th>
+                    <td id="AIA" style="background-color : #212529; display:inline;">Anguilla</td>
+                </tr>
+                <tr>
+                    <th scope="row">8</th>
+                    <td id="ATA" style="background-color : #212529; display:inline;">Antarctica</td>
+                </tr>
+                <tr>
+                    <th scope="row">9</th>
+                    <td id="ATG" style="background-color : #212529; display:inline;">Antigua And Barbuda</td>
+                </tr>
+                <tr>
+                    <th scope="row">10</th>
+                    <td id="ARG" style="background-color : #212529; display:inline;">Argentina</td>
+                </tr>
+                <tr>
+                    <th scope="row">11</th>
+                    <td id="ARM" style="background-color : #212529; display:inline;">Armenia</td>
+                </tr>
+                <tr>
+                    <th scope="row">12</th>
+                    <td id="ABW" style="background-color : #212529; display:inline;">Aruba</td>
+                </tr>
+                <tr>
+                    <th scope="row">13</th>
+                    <td id="AUS" style="background-color : #212529; display:inline;">Australia</td>
+                </tr>
+                <tr>
+                    <th scope="row">14</th>
+                    <td id="AUT" style="background-color : #212529; display:inline;">Austria</td>
+                </tr>
+                <tr>
+                    <th scope="row">15</th>
+                    <td id="AZE" style="background-color : #212529; display:inline;">Azerbaijan</td>
+                </tr>
+                <tr>
+                    <th scope="row">16</th>
+                    <td id="BHS" style="background-color : #212529; display:inline;">Bahamas</td>
+                </tr>
+                <tr>
+                    <th scope="row">17</th>
+                    <td id="BHR" style="background-color : #212529; display:inline;">Bahrain</td>
+                </tr>
+                <tr>
+                    <th scope="row">18</th>
+                    <td id="BGD" style="background-color : #212529; display:inline;">Bangladesh</td>
+                </tr>
+                <tr>
+                    <th scope="row">19</th>
+                    <td id="BRB" style="background-color : #212529; display:inline;">Barbados</td>
+                </tr>
+                <tr>
+                    <th scope="row">20</th>
+                    <td id="BLR" style="background-color : #212529; display:inline;">Belarus</td>
+                </tr>
+                <tr>
+                    <th scope="row">21</th>
+                    <td id="BEL" style="background-color : #212529; display:inline;">Belgium</td>
+                </tr>
+                <tr>
+                    <th scope="row">22</th>
+                    <td id="BLZ" style="background-color : #212529; display:inline;">Belize</td>
+                </tr>
+                <tr>
+                    <th scope="row">23</th>
+                    <td id="BEN" style="background-color : #212529; display:inline;">Benin</td>
+                </tr>
+                <tr>
+                    <th scope="row">24</th>
+                    <td id="BMU" style="background-color : #212529; display:inline;">Bermuda</td>
+                </tr>
+                <tr>
+                    <th scope="row">25</th>
+                    <td id="BTN" style="background-color : #212529; display:inline;">Bhutan</td>
+                </tr>
+                <tr>
+                    <th scope="row">26</th>
+                    <td id="BOL" style="background-color : #212529; display:inline;">Bolivia, Plurinational State Of
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">27</th>
+                    <td id="BIH" style="background-color : #212529; display:inline;">Bosnia And Herzegovina</td>
+                </tr>
+                <tr>
+                    <th scope="row">28</th>
+                    <td id="BWA" style="background-color : #212529; display:inline;">Botswana</td>
+                </tr>
+                <tr>
+                    <th scope="row">29</th>
+                    <td id="BVT" style="background-color : #212529; display:inline;">Bouvet Island</td>
+                </tr>
+                <tr>
+                    <th scope="row">30</th>
+                    <td id="BRA" style="background-color : #212529; display:inline;">Brazil</td>
+                </tr>
+                <tr>
+                    <th scope="row">31</th>
+                    <td id="IOT" style="background-color : #212529; display:inline;">British Indian Ocean Territory</td>
+                </tr>
+                <tr>
+                    <th scope="row">32</th>
+                    <td id="BRN" style="background-color : #212529; display:inline;">Brunei Darussalam</td>
+                </tr>
+                <tr>
+                    <th scope="row">33</th>
+                    <td id="BGR" style="background-color : #212529; display:inline;">Bulgaria</td>
+                </tr>
+                <tr>
+                    <th scope="row">34</th>
+                    <td id="BFA" style="background-color : #212529; display:inline;">Burkina Faso</td>
+                </tr>
+                <tr>
+                    <th scope="row">35</th>
+                    <td id="BDI" style="background-color : #212529; display:inline;">Burundi</td>
+                </tr>
+                <tr>
+                    <th scope="row">36</th>
+                    <td id="KHM" style="background-color : #212529; display:inline;">Cambodia</td>
+                </tr>
+                <tr>
+                    <th scope="row">37</th>
+                    <td id="CMR" style="background-color : #212529; display:inline;">Cameroon</td>
+                </tr>
+                <tr>
+                    <th scope="row">38</th>
+                    <td id="CAN" style="background-color : #212529; display:inline;">Canada</td>
+                </tr>
+                <tr>
+                    <th scope="row">39</th>
+                    <td id="CPV" style="background-color : #212529; display:inline;">Cape Verde</td>
+                </tr>
+                <tr>
+                    <th scope="row">40</th>
+                    <td id="CYM" style="background-color : #212529; display:inline;">Cayman Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">41</th>
+                    <td id="CAF" style="background-color : #212529; display:inline;">Central African Republic</td>
+                </tr>
+                <tr>
+                    <th scope="row">42</th>
+                    <td id="TCD" style="background-color : #212529; display:inline;">Chad</td>
+                </tr>
+                <tr>
+                    <th scope="row">43</th>
+                    <td id="CHL" style="background-color : #212529; display:inline;">Chile</td>
+                </tr>
+                <tr>
+                    <th scope="row">44</th>
+                    <td id="CHN" style="background-color : #212529; display:inline;">China</td>
+                </tr>
+                <tr>
+                    <th scope="row">45</th>
+                    <td id="CXR" style="background-color : #212529; display:inline;">Christmas Island</td>
+                </tr>
+                <tr>
+                    <th scope="row">46</th>
+                    <td id="CCK" style="background-color : #212529; display:inline;">Cocos (Keeling) Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">47</th>
+                    <td id="COL" style="background-color : #212529; display:inline;">Colombia</td>
+                </tr>
+                <tr>
+                    <th scope="row">48</th>
+                    <td id="COM" style="background-color : #212529; display:inline;">Comoros</td>
+                </tr>
+                <tr>
+                    <th scope="row">49</th>
+                    <td id="COG" style="background-color : #212529; display:inline;">Congo</td>
+                </tr>
+                <tr>
+                    <th scope="row">50</th>
+                    <td id="COD" style="background-color : #212529; display:inline;">Congo, The Democratic Republic Of
+                        The</td>
+                </tr>
+                <tr>
+                    <th scope="row">51</th>
+                    <td id="COK" style="background-color : #212529; display:inline;">Cook Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">52</th>
+                    <td id="CRI" style="background-color : #212529; display:inline;">Costa Rica</td>
+                </tr>
+                <tr>
+                    <th scope="row">53</th>
+                    <td id="CIV" style="background-color : #212529; display:inline;">Cte D'Ivoire</td>
+                </tr>
+                <tr>
+                    <th scope="row">54</th>
+                    <td id="HRV" style="background-color : #212529; display:inline;">Croatia</td>
+                </tr>
+                <tr>
+                    <th scope="row">55</th>
+                    <td id="CUB" style="background-color : #212529; display:inline;">Cuba</td>
+                </tr>
+                <tr>
+                    <th scope="row">56</th>
+                    <td id="CYP" style="background-color : #212529; display:inline;">Cyprus</td>
+                </tr>
+                <tr>
+                    <th scope="row">57</th>
+                    <td id="CZE" style="background-color : #212529; display:inline;">Czech Republic</td>
+                </tr>
+                <tr>
+                    <th scope="row">58</th>
+                    <td id="DNK" style="background-color : #212529; display:inline;">Denmark</td>
+                </tr>
+                <tr>
+                    <th scope="row">59</th>
+                    <td id="DJI" style="background-color : #212529; display:inline;">Djibouti</td>
+                </tr>
+                <tr>
+                    <th scope="row">60</th>
+                    <td id="DMA" style="background-color : #212529; display:inline;">Dominica</td>
+                </tr>
+                <tr>
+                    <th scope="row">61</th>
+                    <td id="DOM" style="background-color : #212529; display:inline;">Dominican Republic</td>
+                </tr>
+                <tr>
+                    <th scope="row">62</th>
+                    <td id="ECU" style="background-color : #212529; display:inline;">Ecuador</td>
+                </tr>
+                <tr>
+                    <th scope="row">63</th>
+                    <td id="EGY" style="background-color : #212529; display:inline;">Egypt</td>
+                </tr>
+                <tr>
+                    <th scope="row">64</th>
+                    <td id="SLV" style="background-color : #212529; display:inline;">El Salvador</td>
+                </tr>
+                <tr>
+                    <th scope="row">65</th>
+                    <td id="GNQ" style="background-color : #212529; display:inline;">Equatorial Guinea</td>
+                </tr>
+                <tr>
+                    <th scope="row">66</th>
+                    <td id="ERI" style="background-color : #212529; display:inline;">Eritrea</td>
+                </tr>
+                <tr>
+                    <th scope="row">67</th>
+                    <td id="EST" style="background-color : #212529; display:inline;">Estonia</td>
+                </tr>
+                <tr>
+                    <th scope="row">68</th>
+                    <td id="ETH" style="background-color : #212529; display:inline;">Ethiopia</td>
+                </tr>
+                <tr>
+                    <th scope="row">69</th>
+                    <td id="FLK" style="background-color : #212529; display:inline;">Falkland Islands (Malvinas)</td>
+                </tr>
+                <tr>
+                    <th scope="row">70</th>
+                    <td id="FRO" style="background-color : #212529; display:inline;">Faroe Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">71</th>
+                    <td id="FJI" style="background-color : #212529; display:inline;">Fiji</td>
+                </tr>
+                <tr>
+                    <th scope="row">72</th>
+                    <td id="FIN" style="background-color : #212529; display:inline;">Finland</td>
+                </tr>
+                <tr>
+                    <th scope="row">73</th>
+                    <td id="FRA" style="background-color : #212529; display:inline;">France</td>
+                </tr>
+                <tr>
+                    <th scope="row">74</th>
+                    <td id="GUF" style="background-color : #212529; display:inline;">French Guiana</td>
+                </tr>
+                <tr>
+                    <th scope="row">75</th>
+                    <td id="PYF" style="background-color : #212529; display:inline;">French Polynesia</td>
+                </tr>
+                <tr>
+                    <th scope="row">76</th>
+                    <td id="ATF" style="background-color : #212529; display:inline;">French Southern Territories</td>
+                </tr>
+                <tr>
+                    <th scope="row">77</th>
+                    <td id="GAB" style="background-color : #212529; display:inline;">Gabon</td>
+                </tr>
+                <tr>
+                    <th scope="row">78</th>
+                    <td id="GMB" style="background-color : #212529; display:inline;">Gambia</td>
+                </tr>
+                <tr>
+                    <th scope="row">79</th>
+                    <td id="GEO" style="background-color : #212529; display:inline;">Georgia</td>
+                </tr>
+                <tr>
+                    <th scope="row">80</th>
+                    <td id="DEU" style="background-color : #212529; display:inline;">Germany</td>
+                </tr>
+                <tr>
+                    <th scope="row">81</th>
+                    <td id="GHA" style="background-color : #212529; display:inline;">Ghana</td>
+                </tr>
+                <tr>
+                    <th scope="row">82</th>
+                    <td id="GIB" style="background-color : #212529; display:inline;">Gibraltar</td>
+                </tr>
+                <tr>
+                    <th scope="row">83</th>
+                    <td id="GRC" style="background-color : #212529; display:inline;">Greece</td>
+                </tr>
+                <tr>
+                    <th scope="row">84</th>
+                    <td id="GRL" style="background-color : #212529; display:inline;">Greenland</td>
+                </tr>
+                <tr>
+                    <th scope="row">85</th>
+                    <td id="GRD" style="background-color : #212529; display:inline;">Grenada</td>
+                </tr>
+                <tr>
+                    <th scope="row">86</th>
+                    <td id="GLP" style="background-color : #212529; display:inline;">Guadeloupe</td>
+                </tr>
+                <tr>
+                    <th scope="row">87</th>
+                    <td id="GUM" style="background-color : #212529; display:inline;">Guam</td>
+                </tr>
+                <tr>
+                    <th scope="row">88</th>
+                    <td id="GTM" style="background-color : #212529; display:inline;">Guatemala</td>
+                </tr>
+                <tr>
+                    <th scope="row">89</th>
+                    <td id="GGY" style="background-color : #212529; display:inline;">Guernsey</td>
+                </tr>
+                <tr>
+                    <th scope="row">90</th>
+                    <td id="GIN" style="background-color : #212529; display:inline;">Guinea</td>
+                </tr>
+                <tr>
+                    <th scope="row">91</th>
+                    <td id="GNB" style="background-color : #212529; display:inline;">Guinea-Bissau</td>
+                </tr>
+                <tr>
+                    <th scope="row">92</th>
+                    <td id="GUY" style="background-color : #212529; display:inline;">Guyana</td>
+                </tr>
+                <tr>
+                    <th scope="row">93</th>
+                    <td id="HTI" style="background-color : #212529; display:inline;">Haiti</td>
+                </tr>
+                <tr>
+                    <th scope="row">94</th>
+                    <td id="HMD" style="background-color : #212529; display:inline;">Heard Island And Mcdonald Islands
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">95</th>
+                    <td id="VAT" style="background-color : #212529; display:inline;">Holy See (Vatican City State)</td>
+                </tr>
+                <tr>
+                    <th scope="row">96</th>
+                    <td id="HND" style="background-color : #212529; display:inline;">Honduras</td>
+                </tr>
+                <tr>
+                    <th scope="row">97</th>
+                    <td id="HKG" style="background-color : #212529; display:inline;">Hong Kong</td>
+                </tr>
+                <tr>
+                    <th scope="row">98</th>
+                    <td id="HUN" style="background-color : #212529; display:inline;">Hungary</td>
+                </tr>
+                <tr>
+                    <th scope="row">99</th>
+                    <td id="ISL" style="background-color : #212529; display:inline;">Iceland</td>
+                </tr>
+                <tr>
+                    <th scope="row">100</th>
+                    <td id="IND" style="background-color : #212529; display:inline;">India</td>
+                </tr>
+                <tr>
+                    <th scope="row">101</th>
+                    <td id="IDN" style="background-color : #212529; display:inline;">Indonesia</td>
+                </tr>
+                <tr>
+                    <th scope="row">102</th>
+                    <td id="IRN" style="background-color : #212529; display:inline;">Iran, Islamic Republic Of</td>
+                </tr>
+                <tr>
+                    <th scope="row">103</th>
+                    <td id="IRQ" style="background-color : #212529; display:inline;">Iraq</td>
+                </tr>
+                <tr>
+                    <th scope="row">104</th>
+                    <td id="IRL" style="background-color : #212529; display:inline;">Ireland</td>
+                </tr>
+                <tr>
+                    <th scope="row">105</th>
+                    <td id="IMN" style="background-color : #212529; display:inline;">Isle Of Man</td>
+                </tr>
+                <tr>
+                    <th scope="row">106</th>
+                    <td id="ISR" style="background-color : #212529; display:inline;">Israel</td>
+                </tr>
+                <tr>
+                    <th scope="row">107</th>
+                    <td id="ITA" style="background-color : #212529; display:inline;">Italy</td>
+                </tr>
+                <tr>
+                    <th scope="row">108</th>
+                    <td id="JAM" style="background-color : #212529; display:inline;">Jamaica</td>
+                </tr>
+                <tr>
+                    <th scope="row">109</th>
+                    <td id="JPN" style="background-color : #212529; display:inline;">Japan</td>
+                </tr>
+                <tr>
+                    <th scope="row">110</th>
+                    <td id="JEY" style="background-color : #212529; display:inline;">Jersey</td>
+                </tr>
+                <tr>
+                    <th scope="row">111</th>
+                    <td id="JOR" style="background-color : #212529; display:inline;">Jordan</td>
+                </tr>
+                <tr>
+                    <th scope="row">112</th>
+                    <td id="KAZ" style="background-color : #212529; display:inline;">Kazakhstan</td>
+                </tr>
+                <tr>
+                    <th scope="row">113</th>
+                    <td id="KEN" style="background-color : #212529; display:inline;">Kenya</td>
+                </tr>
+                <tr>
+                    <th scope="row">114</th>
+                    <td id="KIR" style="background-color : #212529; display:inline;">Kiribati</td>
+                </tr>
+                <tr>
+                    <th scope="row">115</th>
+                    <td id="PRK" style="background-color : #212529; display:inline;">Korea, Democratic People'S Republic
+                        Of</td>
+                </tr>
+                <tr>
+                    <th scope="row">116</th>
+                    <td id="KOR" style="background-color : #212529; display:inline;">Korea, Republic Of</td>
+                </tr>
+                <tr>
+                    <th scope="row">117</th>
+                    <td id="KWT" style="background-color : #212529; display:inline;">Kuwait</td>
+                </tr>
+                <tr>
+                    <th scope="row">118</th>
+                    <td id="KGZ" style="background-color : #212529; display:inline;">Kyrgyzstan</td>
+                </tr>
+                <tr>
+                    <th scope="row">119</th>
+                    <td id="LAO" style="background-color : #212529; display:inline;">Lao People'S Democratic Republic
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">120</th>
+                    <td id="LVA" style="background-color : #212529; display:inline;">Latvia</td>
+                </tr>
+                <tr>
+                    <th scope="row">121</th>
+                    <td id="LBN" style="background-color : #212529; display:inline;">Lebanon</td>
+                </tr>
+                <tr>
+                    <th scope="row">122</th>
+                    <td id="LSO" style="background-color : #212529; display:inline;">Lesotho</td>
+                </tr>
+                <tr>
+                    <th scope="row">123</th>
+                    <td id="LBR" style="background-color : #212529; display:inline;">Liberia</td>
+                </tr>
+                <tr>
+                    <th scope="row">124</th>
+                    <td id="LBY" style="background-color : #212529; display:inline;">Libyan Arab Jamahiriya</td>
+                </tr>
+                <tr>
+                    <th scope="row">125</th>
+                    <td id="LIE" style="background-color : #212529; display:inline;">Liechtenstein</td>
+                </tr>
+                <tr>
+                    <th scope="row">126</th>
+                    <td id="LTU" style="background-color : #212529; display:inline;">Lithuania</td>
+                </tr>
+                <tr>
+                    <th scope="row">127</th>
+                    <td id="LUX" style="background-color : #212529; display:inline;">Luxembourg</td>
+                </tr>
+                <tr>
+                    <th scope="row">128</th>
+                    <td id="MAC" style="background-color : #212529; display:inline;">Macao</td>
+                </tr>
+                <tr>
+                    <th scope="row">129</th>
+                    <td id="MKD" style="background-color : #212529; display:inline;">Macedonia, The Former Yugoslav
+                        Republic Of</td>
+                </tr>
+                <tr>
+                    <th scope="row">130</th>
+                    <td id="MDG" style="background-color : #212529; display:inline;">Madagascar</td>
+                </tr>
+                <tr>
+                    <th scope="row">131</th>
+                    <td id="MWI" style="background-color : #212529; display:inline;">Malawi</td>
+                </tr>
+                <tr>
+                    <th scope="row">132</th>
+                    <td id="MYS" style="background-color : #212529; display:inline;">Malaysia</td>
+                </tr>
+                <tr>
+                    <th scope="row">133</th>
+                    <td id="MDV" style="background-color : #212529; display:inline;">Maldives</td>
+                </tr>
+                <tr>
+                    <th scope="row">134</th>
+                    <td id="MLI" style="background-color : #212529; display:inline;">Mali</td>
+                </tr>
+                <tr>
+                    <th scope="row">135</th>
+                    <td id="MLT" style="background-color : #212529; display:inline;">Malta</td>
+                </tr>
+                <tr>
+                    <th scope="row">136</th>
+                    <td id="MHL" style="background-color : #212529; display:inline;">Marshall Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">137</th>
+                    <td id="MTQ" style="background-color : #212529; display:inline;">Martinique</td>
+                </tr>
+                <tr>
+                    <th scope="row">138</th>
+                    <td id="MRT" style="background-color : #212529; display:inline;">Mauritania</td>
+                </tr>
+                <tr>
+                    <th scope="row">139</th>
+                    <td id="MUS" style="background-color : #212529; display:inline;">Mauritius</td>
+                </tr>
+                <tr>
+                    <th scope="row">140</th>
+                    <td id="MYT" style="background-color : #212529; display:inline;">Mayotte</td>
+                </tr>
+                <tr>
+                    <th scope="row">141</th>
+                    <td id="MEX" style="background-color : #212529; display:inline;">Mexico</td>
+                </tr>
+                <tr>
+                    <th scope="row">142</th>
+                    <td id="FSM" style="background-color : #212529; display:inline;">Micronesia, Federated States Of
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">143</th>
+                    <td id="MDA" style="background-color : #212529; display:inline;">Moldova, Republic Of</td>
+                </tr>
+                <tr>
+                    <th scope="row">144</th>
+                    <td id="MCO" style="background-color : #212529; display:inline;">Monaco</td>
+                </tr>
+                <tr>
+                    <th scope="row">145</th>
+                    <td id="MNG" style="background-color : #212529; display:inline;">Mongolia</td>
+                </tr>
+                <tr>
+                    <th scope="row">146</th>
+                    <td id="MNE" style="background-color : #212529; display:inline;">Montenegro</td>
+                </tr>
+                <tr>
+                    <th scope="row">147</th>
+                    <td id="MSR" style="background-color : #212529; display:inline;">Montserrat</td>
+                </tr>
+                <tr>
+                    <th scope="row">148</th>
+                    <td id="MAR" style="background-color : #212529; display:inline;">Morocco</td>
+                </tr>
+                <tr>
+                    <th scope="row">149</th>
+                    <td id="MOZ" style="background-color : #212529; display:inline;">Mozambique</td>
+                </tr>
+                <tr>
+                    <th scope="row">150</th>
+                    <td id="MMR" style="background-color : #212529; display:inline;">Myanmar</td>
+                </tr>
+                <tr>
+                    <th scope="row">151</th>
+                    <td id="NAM" style="background-color : #212529; display:inline;">Namibia</td>
+                </tr>
+                <tr>
+                    <th scope="row">152</th>
+                    <td id="NRU" style="background-color : #212529; display:inline;">Nauru</td>
+                </tr>
+                <tr>
+                    <th scope="row">153</th>
+                    <td id="NPL" style="background-color : #212529; display:inline;">Nepal</td>
+                </tr>
+                <tr>
+                    <th scope="row">154</th>
+                    <td id="NLD" style="background-color : #212529; display:inline;">Netherlands</td>
+                </tr>
+                <tr>
+                    <th scope="row">155</th>
+                    <td id="ANT" style="background-color : #212529; display:inline;">Netherlands Antilles</td>
+                </tr>
+                <tr>
+                    <th scope="row">156</th>
+                    <td id="NCL" style="background-color : #212529; display:inline;">New Caledonia</td>
+                </tr>
+                <tr>
+                    <th scope="row">157</th>
+                    <td id="NZL" style="background-color : #212529; display:inline;">New Zealand</td>
+                </tr>
+                <tr>
+                    <th scope="row">158</th>
+                    <td id="NIC" style="background-color : #212529; display:inline;">Nicaragua</td>
+                </tr>
+                <tr>
+                    <th scope="row">159</th>
+                    <td id="NER" style="background-color : #212529; display:inline;">Niger</td>
+                </tr>
+                <tr>
+                    <th scope="row">160</th>
+                    <td id="NGA" style="background-color : #212529; display:inline;">Nigeria</td>
+                </tr>
+                <tr>
+                    <th scope="row">161</th>
+                    <td id="NIU" style="background-color : #212529; display:inline;">Niue</td>
+                </tr>
+                <tr>
+                    <th scope="row">162</th>
+                    <td id="NFK" style="background-color : #212529; display:inline;">Norfolk Island</td>
+                </tr>
+                <tr>
+                    <th scope="row">163</th>
+                    <td id="MNP" style="background-color : #212529; display:inline;">Northern Mariana Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">164</th>
+                    <td id="NOR" style="background-color : #212529; display:inline;">Norway</td>
+                </tr>
+                <tr>
+                    <th scope="row">165</th>
+                    <td id="OMN" style="background-color : #212529; display:inline;">Oman</td>
+                </tr>
+                <tr>
+                    <th scope="row">166</th>
+                    <td id="PAK" style="background-color : #212529; display:inline;">Pakistan</td>
+                </tr>
+                <tr>
+                    <th scope="row">167</th>
+                    <td id="PLW" style="background-color : #212529; display:inline;">Palau</td>
+                </tr>
+                <tr>
+                    <th scope="row">168</th>
+                    <td id="PSE" style="background-color : #212529; display:inline;">Palestinian Territory, Occupied
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">169</th>
+                    <td id="PAN" style="background-color : #212529; display:inline;">Panama</td>
+                </tr>
+                <tr>
+                    <th scope="row">170</th>
+                    <td id="PNG" style="background-color : #212529; display:inline;">Papua New Guinea</td>
+                </tr>
+                <tr>
+                    <th scope="row">171</th>
+                    <td id="PRY" style="background-color : #212529; display:inline;">Paraguay</td>
+                </tr>
+                <tr>
+                    <th scope="row">172</th>
+                    <td id="PER" style="background-color : #212529; display:inline;">Peru</td>
+                </tr>
+                <tr>
+                    <th scope="row">173</th>
+                    <td id="PHL" style="background-color : #212529; display:inline;">Philippines</td>
+                </tr>
+                <tr>
+                    <th scope="row">174</th>
+                    <td id="PCN" style="background-color : #212529; display:inline;">Pitcairn</td>
+                </tr>
+                <tr>
+                    <th scope="row">175</th>
+                    <td id="POL" style="background-color : #212529; display:inline;">Poland</td>
+                </tr>
+                <tr>
+                    <th scope="row">176</th>
+                    <td id="PRT" style="background-color : #212529; display:inline;">Portugal</td>
+                </tr>
+                <tr>
+                    <th scope="row">177</th>
+                    <td id="PRI" style="background-color : #212529; display:inline;">Puerto Rico</td>
+                </tr>
+                <tr>
+                    <th scope="row">178</th>
+                    <td id="QAT" style="background-color : #212529; display:inline;">Qatar</td>
+                </tr>
+                <tr>
+                    <th scope="row">179</th>
+                    <td id="REU" style="background-color : #212529; display:inline;">Runion</td>
+                </tr>
+                <tr>
+                    <th scope="row">180</th>
+                    <td id="ROU" style="background-color : #212529; display:inline;">Romania</td>
+                </tr>
+                <tr>
+                    <th scope="row">181</th>
+                    <td id="RUS" style="background-color : #212529; display:inline;">Russian Federation</td>
+                </tr>
+                <tr>
+                    <th scope="row">182</th>
+                    <td id="RWA" style="background-color : #212529; display:inline;">Rwanda</td>
+                </tr>
+                <tr>
+                    <th scope="row">183</th>
+                    <td id="SHN" style="background-color : #212529; display:inline;">Saint Helena, Ascension And Tristan
+                        Da Cunha</td>
+                </tr>
+                <tr>
+                    <th scope="row">184</th>
+                    <td id="KNA" style="background-color : #212529; display:inline;">Saint Kitts And Nevis</td>
+                </tr>
+                <tr>
+                    <th scope="row">185</th>
+                    <td id="LCA" style="background-color : #212529; display:inline;">Saint Lucia</td>
+                </tr>
+                <tr>
+                    <th scope="row">186</th>
+                    <td id="SPM" style="background-color : #212529; display:inline;">Saint Pierre And Miquelon</td>
+                </tr>
+                <tr>
+                    <th scope="row">187</th>
+                    <td id="VCT" style="background-color : #212529; display:inline;">Saint Vincent And The Grenadines
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">188</th>
+                    <td id="WSM" style="background-color : #212529; display:inline;">Samoa</td>
+                </tr>
+                <tr>
+                    <th scope="row">189</th>
+                    <td id="SMR" style="background-color : #212529; display:inline;">San Marino</td>
+                </tr>
+                <tr>
+                    <th scope="row">190</th>
+                    <td id="STP" style="background-color : #212529; display:inline;">Sao Tome And Principe</td>
+                </tr>
+                <tr>
+                    <th scope="row">191</th>
+                    <td id="SAU" style="background-color : #212529; display:inline;">Saudi Arabia</td>
+                </tr>
+                <tr>
+                    <th scope="row">192</th>
+                    <td id="SEN" style="background-color : #212529; display:inline;">Senegal</td>
+                </tr>
+                <tr>
+                    <th scope="row">193</th>
+                    <td id="SRB" style="background-color : #212529; display:inline;">Serbia</td>
+                </tr>
+                <tr>
+                    <th scope="row">194</th>
+                    <td id="SYC" style="background-color : #212529; display:inline;">Seychelles</td>
+                </tr>
+                <tr>
+                    <th scope="row">195</th>
+                    <td id="SLE" style="background-color : #212529; display:inline;">Sierra Leone</td>
+                </tr>
+                <tr>
+                    <th scope="row">196</th>
+                    <td id="SGP" style="background-color : #212529; display:inline;">Singapore</td>
+                </tr>
+                <tr>
+                    <th scope="row">197</th>
+                    <td id="SVK" style="background-color : #212529; display:inline;">Slovakia</td>
+                </tr>
+                <tr>
+                    <th scope="row">198</th>
+                    <td id="SVN" style="background-color : #212529; display:inline;">Slovenia</td>
+                </tr>
+                <tr>
+                    <th scope="row">199</th>
+                    <td id="SLB" style="background-color : #212529; display:inline;">Solomon Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">200</th>
+                    <td id="SOM" style="background-color : #212529; display:inline;">Somalia</td>
+                </tr>
+                <tr>
+                    <th scope="row">201</th>
+                    <td id="ZAF" style="background-color : #212529; display:inline;">South Africa</td>
+                </tr>
+                <tr>
+                    <th scope="row">202</th>
+                    <td id="SGS" style="background-color : #212529; display:inline;">South Georgia And The South
+                        Sandwich Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">203</th>
+                    <td id="SSD" style="background-color : #212529; display:inline;">South Sudan</td>
+                </tr>
+                <tr>
+                    <th scope="row">204</th>
+                    <td id="ESP" style="background-color : #212529; display:inline;">Spain</td>
+                </tr>
+                <tr>
+                    <th scope="row">205</th>
+                    <td id="LKA" style="background-color : #212529; display:inline;">Sri Lanka</td>
+                </tr>
+                <tr>
+                    <th scope="row">206</th>
+                    <td id="SDN" style="background-color : #212529; display:inline;">Sudan</td>
+                </tr>
+                <tr>
+                    <th scope="row">207</th>
+                    <td id="SUR" style="background-color : #212529; display:inline;">Suriname</td>
+                </tr>
+                <tr>
+                    <th scope="row">208</th>
+                    <td id="SJM" style="background-color : #212529; display:inline;">Svalbard And Jan Mayen</td>
+                </tr>
+                <tr>
+                    <th scope="row">209</th>
+                    <td id="SWZ" style="background-color : #212529; display:inline;">Swaziland</td>
+                </tr>
+                <tr>
+                    <th scope="row">210</th>
+                    <td id="SWE" style="background-color : #212529; display:inline;">Sweden</td>
+                </tr>
+                <tr>
+                    <th scope="row">211</th>
+                    <td id="CHE" style="background-color : #212529; display:inline;">Switzerland</td>
+                </tr>
+                <tr>
+                    <th scope="row">212</th>
+                    <td id="SYR" style="background-color : #212529; display:inline;">Syrian Arab Republic</td>
+                </tr>
+                <tr>
+                    <th scope="row">213</th>
+                    <td id="TWN" style="background-color : #212529; display:inline;">Taiwan, Province Of China</td>
+                </tr>
+                <tr>
+                    <th scope="row">214</th>
+                    <td id="TJK" style="background-color : #212529; display:inline;">Tajikistan</td>
+                </tr>
+                <tr>
+                    <th scope="row">215</th>
+                    <td id="TZA" style="background-color : #212529; display:inline;">Tanzania, United Republic Of</td>
+                </tr>
+                <tr>
+                    <th scope="row">216</th>
+                    <td id="THA" style="background-color : #212529; display:inline;">Thailand</td>
+                </tr>
+                <tr>
+                    <th scope="row">217</th>
+                    <td id="TLS" style="background-color : #212529; display:inline;">Timor-Leste</td>
+                </tr>
+                <tr>
+                    <th scope="row">218</th>
+                    <td id="TGO" style="background-color : #212529; display:inline;">Togo</td>
+                </tr>
+                <tr>
+                    <th scope="row">219</th>
+                    <td id="TKL" style="background-color : #212529; display:inline;">Tokelau</td>
+                </tr>
+                <tr>
+                    <th scope="row">220</th>
+                    <td id="TON" style="background-color : #212529; display:inline;">Tonga</td>
+                </tr>
+                <tr>
+                    <th scope="row">221</th>
+                    <td id="TTO" style="background-color : #212529; display:inline;">Trinidad And Tobago</td>
+                </tr>
+                <tr>
+                    <th scope="row">222</th>
+                    <td id="TUN" style="background-color : #212529; display:inline;">Tunisia</td>
+                </tr>
+                <tr>
+                    <th scope="row">223</th>
+                    <td id="TUR" style="background-color : #212529; display:inline;">Turkey</td>
+                </tr>
+                <tr>
+                    <th scope="row">224</th>
+                    <td id="TKM" style="background-color : #212529; display:inline;">Turkmenistan</td>
+                </tr>
+                <tr>
+                    <th scope="row">225</th>
+                    <td id="TCA" style="background-color : #212529; display:inline;">Turks And Caicos Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">226</th>
+                    <td id="TUV" style="background-color : #212529; display:inline;">Tuvalu</td>
+                </tr>
+                <tr>
+                    <th scope="row">227</th>
+                    <td id="UGA" style="background-color : #212529; display:inline;">Uganda</td>
+                </tr>
+                <tr>
+                    <th scope="row">228</th>
+                    <td id="UKR" style="background-color : #212529; display:inline;">Ukraine</td>
+                </tr>
+                <tr>
+                    <th scope="row">229</th>
+                    <td id="ARE" style="background-color : #212529; display:inline;">United Arab Emirates</td>
+                </tr>
+                <tr>
+                    <th scope="row">230</th>
+                    <td id="GBR" style="background-color : #212529; display:inline;">United Kingdom</td>
+                </tr>
+                <tr>
+                    <th scope="row">231</th>
+                    <td id="USA" style="background-color : #212529; display:inline;">United States</td>
+                </tr>
+                <tr>
+                    <th scope="row">232</th>
+                    <td id="UMI" style="background-color : #212529; display:inline;">United States Minor Outlying
+                        Islands</td>
+                </tr>
+                <tr>
+                    <th scope="row">233</th>
+                    <td id="URY" style="background-color : #212529; display:inline;">Uruguay</td>
+                </tr>
+                <tr>
+                    <th scope="row">234</th>
+                    <td id="UZB" style="background-color : #212529; display:inline;">Uzbekistan</td>
+                </tr>
+                <tr>
+                    <th scope="row">235</th>
+                    <td id="VUT" style="background-color : #212529; display:inline;">Vanuatu</td>
+                </tr>
+                <tr>
+                    <th scope="row">236</th>
+                    <td id="VEN" style="background-color : #212529; display:inline;">Venezuela, Bolivarian Republic Of
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">237</th>
+                    <td id="VNM" style="background-color : #212529; display:inline;">Viet Nam</td>
+                </tr>
+                <tr>
+                    <th scope="row">238</th>
+                    <td id="VGB" style="background-color : #212529; display:inline;">Virgin Islands, British</td>
+                </tr>
+                <tr>
+                    <th scope="row">239</th>
+                    <td id="VIR" style="background-color : #212529; display:inline;">Virgin Islands, U.S.</td>
+                </tr>
+                <tr>
+                    <th scope="row">240</th>
+                    <td id="WLF" style="background-color : #212529; display:inline;">Wallis And Futuna</td>
+                </tr>
+                <tr>
+                    <th scope="row">241</th>
+                    <td id="ESH" style="background-color : #212529; display:inline;">Western Sahara</td>
+                </tr>
+                <tr>
+                    <th scope="row">242</th>
+                    <td id="YEM" style="background-color : #212529; display:inline;">Yemen</td>
+                </tr>
+                <tr>
+                    <th scope="row">243</th>
+                    <td id="ZMB" style="background-color : #212529; display:inline;">Zambia</td>
+                </tr>
+                <tr>
+                    <th scope="row">244</th>
+                    <td id="ZWE" style="background-color : #212529; display:inline;">Zimbabwe</td>
+                </tr>
 
             </tbody>
         </table>
@@ -89,42 +1097,54 @@ Atlas Quiz
 
     });
     var countries_and_codes = { "afghanistan": "AFG", "albania": "ALB", "algeria": "DZA", "american samoa": "ASM", "andorra": "AND", "angola": "AGO", "anguilla": "AIA", "antarctica": "ATA", "antigua and barbuda": "ATG", "argentina": "ARG", "armenia": "ARM", "aruba": "ABW", "australia": "AUS", "austria": "AUT", "azerbaijan": "AZE", "bahamas": "BHS", "bahrain": "BHR", "bangladesh": "BGD", "barbados": "BRB", "belarus": "BLR", "belgium": "BEL", "belize": "BLZ", "benin": "BEN", "bermuda": "BMU", "bhutan": "BTN", "bolivia, plurinational state of": "BOL", "bolivia": "BOL", "bosnia and herzegovina": "BIH", "botswana": "BWA", "bouvet island": "BVT", "brazil": "BRA", "british indian ocean territory": "IOT", "brunei darussalam": "BRN", "brunei": "BRN", "bulgaria": "BGR", "burkina faso": "BFA", "burundi": "BDI", "cambodia": "KHM", "cameroon": "CMR", "canada": "CAN", "cape verde": "CPV", "cayman islands": "CYM", "central african republic": "CAF", "chad": "TCD", "chile": "CHL", "china": "CHN", "christmas island": "CXR", "cocos (keeling) islands": "CCK", "colombia": "COL", "comoros": "COM", "congo": "COG", "congo, the democratic republic of the": "COD", "cook islands": "COK", "costa rica": "CRI", "c�te d'ivoire": "CIV", "ivory coast": "CIV", "croatia": "HRV", "cuba": "CUB", "cyprus": "CYP", "czech republic": "CZE", "denmark": "DNK", "djibouti": "DJI", "dominica": "DMA", "dominican republic": "DOM", "ecuador": "ECU", "egypt": "EGY", "el salvador": "SLV", "equatorial guinea": "GNQ", "eritrea": "ERI", "estonia": "EST", "ethiopia": "ETH", "falkland islands (malvinas)": "FLK", "faroe islands": "FRO", "fiji": "FJI", "finland": "FIN", "france": "FRA", "french guiana": "GUF", "french polynesia": "PYF", "french southern territories": "ATF", "gabon": "GAB", "gambia": "GMB", "georgia": "GEO", "germany": "DEU", "ghana": "GHA", "gibraltar": "GIB", "greece": "GRC", "greenland": "GRL", "grenada": "GRD", "guadeloupe": "GLP", "guam": "GUM", "guatemala": "GTM", "guernsey": "GGY", "guinea": "GIN", "guinea-bissau": "GNB", "guyana": "GUY", "haiti": "HTI", "heard island and mcdonald islands": "HMD", "holy see (vatican city state)": "VAT", "honduras": "HND", "hong kong": "HKG", "hungary": "HUN", "iceland": "ISL", "india": "IND", "indonesia": "IDN", "iran, islamic republic of": "IRN", "iraq": "IRQ", "ireland": "IRL", "isle of man": "IMN", "israel": "ISR", "italy": "ITA", "jamaica": "JAM", "japan": "JPN", "jersey": "JEY", "jordan": "JOR", "kazakhstan": "KAZ", "kenya": "KEN", "kiribati": "KIR", "korea, democratic people's republic of": "PRK", "korea, republic of": "KOR", "south korea": "KOR", "kuwait": "KWT", "kyrgyzstan": "KGZ", "lao people's democratic republic": "LAO", "latvia": "LVA", "lebanon": "LBN", "lesotho": "LSO", "liberia": "LBR", "libyan arab jamahiriya": "LBY", "libya": "LBY", "liechtenstein": "LIE", "lithuania": "LTU", "luxembourg": "LUX", "macao": "MAC", "macedonia, the former yugoslav republic of": "MKD", "madagascar": "MDG", "malawi": "MWI", "malaysia": "MYS", "maldives": "MDV", "mali": "MLI", "malta": "MLT", "marshall islands": "MHL", "martinique": "MTQ", "mauritania": "MRT", "mauritius": "MUS", "mayotte": "MYT", "mexico": "MEX", "micronesia, federated states of": "FSM", "moldova, republic of": "MDA", "monaco": "MCO", "mongolia": "MNG", "montenegro": "MNE", "montserrat": "MSR", "morocco": "MAR", "mozambique": "MOZ", "myanmar": "MMR", "burma": "MMR", "namibia": "NAM", "nauru": "NRU", "nepal": "NPL", "netherlands": "NLD", "netherlands antilles": "ANT", "new caledonia": "NCL", "new zealand": "NZL", "nicaragua": "NIC", "niger": "NER", "nigeria": "NGA", "niue": "NIU", "norfolk island": "NFK", "northern mariana islands": "MNP", "norway": "NOR", "oman": "OMN", "pakistan": "PAK", "palau": "PLW", "palestinian territory, occupied": "PSE", "panama": "PAN", "papua new guinea": "PNG", "paraguay": "PRY", "peru": "PER", "philippines": "PHL", "pitcairn": "PCN", "poland": "POL", "portugal": "PRT", "puerto rico": "PRI", "qatar": "QAT", "r�union": "REU", "romania": "ROU", "russian federation": "RUS", "russia": "RUS", "rwanda": "RWA", "saint helena, ascension and tristan da cunha": "SHN", "saint kitts and nevis": "KNA", "saint lucia": "LCA", "saint pierre and miquelon": "SPM", "saint vincent and the grenadines": "VCT", "saint vincent & the grenadines": "VCT", "st. vincent and the grenadines": "VCT", "samoa": "WSM", "san marino": "SMR", "sao tome and principe": "STP", "saudi arabia": "SAU", "senegal": "SEN", "serbia": "SRB", "seychelles": "SYC", "sierra leone": "SLE", "singapore": "SGP", "slovakia": "SVK", "slovenia": "SVN", "solomon islands": "SLB", "somalia": "SOM", "south africa": "ZAF", "south georgia and the south sandwich islands": "SGS", "south sudan": "SSD", "spain": "ESP", "sri lanka": "LKA", "sudan": "SDN", "suriname": "SUR", "svalbard and jan mayen": "SJM", "swaziland": "SWZ", "sweden": "SWE", "switzerland": "CHE", "syrian arab republic": "SYR", "taiwan, province of china": "TWN", "taiwan": "TWN", "tajikistan": "TJK", "tanzania, united republic of": "TZA", "thailand": "THA", "timor-leste": "TLS", "togo": "TGO", "tokelau": "TKL", "tonga": "TON", "trinidad and tobago": "TTO", "tunisia": "TUN", "turkey": "TUR", "turkmenistan": "TKM", "turks and caicos islands": "TCA", "tuvalu": "TUV", "uganda": "UGA", "ukraine": "UKR", "united arab emirates": "ARE", "united kingdom": "GBR", "united states": "USA", "united states minor outlying islands": "UMI", "uruguay": "URY", "uzbekistan": "UZB", "vanuatu": "VUT", "venezuela, bolivarian republic of": "VEN", "venezuela": "VEN", "viet nam": "VNM", "vietnam": "VNM", "virgin islands, british": "VGB", "virgin islands, u.s.": "VIR", "wallis and futuna": "WLF", "western sahara": "ESH", "yemen": "YEM", "zambia": "ZMB", "zimbabwe": "ZWE" };
-    var countries_table = ``;
-    var country_no = 1;
-    let all_country_codes =[
-        "in",
-        "iso_3166_1_alpha_3",
-    ];
-    let all_countries = [];
-    for (var country in countries_and_codes) {
-        let x = countries_and_codes[country];
-        country = country.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-        countries_table += `
-            <tr>
-                <th scope="row">${country_no}</th>
-                <td  id = "${x}" style="background-color : #212529; display:inline;">${country}</td>
-            </tr>
-        `;
-        all_country_codes.push(countries_and_codes[country.toLowerCase()]);
-        all_countries.push(country);
-        country_no++;
-    }
-    document.getElementById("countries").innerHTML = countries_table;
+    
+    
+    let all_country_codes = ["in", "iso_3166_1_alpha_3",'AFG', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'AIA', 'ATA', 'ATG', 'ARG', 'ARM', 'ABW', 'AUS', 'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 'BRB', 'BLR', 'BEL', 'BLZ', 'BEN', 'BMU', 'BTN', 'BOL', 'BIH', 'BWA', 'BVT', 'BRA', 'IOT', 'BRN', 'BGR', 'BFA', 'BDI', 'KHM', 'CMR', 'CAN', 'CPV', 'CYM', 'CAF', 'TCD', 'CHL', 'CHN', 'CXR', 'CCK', 'COL', 'COM', 'COG', 'COD', 'COK', 'CRI', 'CIV', 'HRV', 'CUB', 'CYP', 'CZE', 'DNK', 'DJI', 'DMA', 'DOM', 'ECU', 'EGY', 'SLV', 'GNQ', 'ERI', 'EST', 'ETH', 'FLK', 'FRO', 'FJI', 'FIN', 'FRA', 'GUF', 'PYF', 'ATF', 'GAB', 'GMB', 'GEO', 'DEU', 'GHA', 'GIB', 'GRC', 'GRL', 'GRD', 'GLP', 'GUM', 'GTM', 'GGY', 'GIN', 'GNB', 'GUY', 'HTI', 'HMD', 'VAT', 'HND', 'HKG', 'HUN', 'ISL', 'IND', 'IDN', 'IRN', 'IRQ', 'IRL', 'IMN', 'ISR', 'ITA', 'JAM', 'JPN', 'JEY', 'JOR', 'KAZ', 'KEN', 'KIR', 'PRK', 'KOR', 'KWT', 'KGZ', 'LAO', 'LVA', 'LBN', 'LSO', 'LBR', 'LBY', 'LIE', 'LTU', 'LUX', 'MAC', 'MKD', 'MDG', 'MWI', 'MYS', 'MDV', 'MLI', 'MLT', 'MHL', 'MTQ', 'MRT', 'MUS', 'MYT', 'MEX', 'FSM', 'MDA', 'MCO', 'MNG', 'MNE', 'MSR', 'MAR', 'MOZ', 'MMR', 'NAM', 'NRU', 'NPL', 'NLD', 'ANT', 'NCL', 'NZL', 'NIC', 'NER', 'NGA', 'NIU', 'NFK', 'MNP', 'NOR', 'OMN', 'PAK', 'PLW', 'PSE', 'PAN', 'PNG', 'PRY', 'PER', 'PHL', 'PCN', 'POL', 'PRT', 'PRI', 'QAT', 'REU', 'ROU', 'RUS', 'RWA', 'SHN', 'KNA', 'LCA', 'SPM', 'VCT', 'WSM', 'SMR', 'STP', 'SAU', 'SEN', 'SRB', 'SYC', 'SLE', 'SGP', 'SVK', 'SVN', 'SLB', 'SOM', 'ZAF', 'SGS', 'SSD', 'ESP', 'LKA', 'SDN', 'SUR', 'SJM', 'SWZ', 'SWE', 'CHE', 'SYR', 'TWN', 'TJK', 'TZA', 'THA', 'TLS', 'TGO', 'TKL', 'TON', 'TTO', 'TUN', 'TUR', 'TKM', 'TCA', 'TUV', 'UGA', 'UKR', 'ARE', 'GBR', 'USA', 'UMI', 'URY', 'UZB', 'VUT', 'VEN', 'VNM', 'VGB', 'VIR', 'WLF', 'ESH', 'YEM', 'ZMB', 'ZWE'];
+    
+
     function checkPlace() {
         let place = document.getElementById("input_place").value;
         place = place.toLowerCase();
-        if (countries_and_codes[place] != undefined) {
+        map.setFilter('country-boundaries', countries_inputted);
+        if (countries_and_codes[place] != undefined && not_in_inputted_countries(countries_and_codes[place])) {
             countries_inputted.push(countries_and_codes[place])
-            all_country_codes = all_country_codes.filter(val => val !==countries_and_codes[place]);
-            all_countries = all_countries.filter(val => val !== place);
-            map.setFilter('country-boundaries', countries_inputted);
-            let kc = "Known Countries : " + (countries_inputted.length - 2).toString()
-            document.getElementById("known_countries").innerHTML = kc;
-            document.getElementById(countries_and_codes[place]).style = "background-color : green; color: white;"
+            all_country_codes = all_country_codes.filter(val => val !== countries_and_codes[place]);
+            map.addLayer(
+            {
+                id: 'present_country',
+                source: {
+                    type: 'vector',
+                    url: 'mapbox://mapbox.country-boundaries-v1',
+                },
+                'source-layer': 'country_boundaries',
+                type: 'fill',
+                paint: {
+                    'fill-color': 'violet',
+                    'fill-opacity': 0.4,
+                },
+            },
+            'country-label'
+        );
+        map.setFilter('present_country', ["in", "iso_3166_1_alpha_3", countries_and_codes[place]]);
+        let kc = "Known Countries : " + (countries_inputted.length - 2).toString()
+        document.getElementById("known_countries").innerHTML = kc;
+        document.getElementById(countries_and_codes[place]).style = "background-color : green; color: white;";
         }
 
         document.getElementById("input_place").value = "";
     }
+    function not_in_inputted_countries(a)
+    {
+        for(let i=0;i<countries_inputted.length; i++)
+        {
+            if(countries_inputted[i] == a)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     var input = document.getElementById("input_place");
 
     input.addEventListener("keyup", function (event) {
@@ -135,19 +1155,69 @@ Atlas Quiz
             document.getElementById("next_button").click();
         }
     });
-    function seeUnknownCountries()
-    {
-        console.log(all_country_codes);
+    function seeUnknownCountries() {
+        document.getElementById("next_button").style = 'display:none';
+        document.getElementById("see_unknow_countries_button").style = 'display:none';
+        document.getElementById("try_again").innerHTML =   `<a href="" class="btn btn-primary">Try Again</a>`;
+        document.getElementById("input_place").disabled = true;
         map.setFilter('unknown_countries', all_country_codes);
         let j = 0;
-        for(let i in all_country_codes)
-        {
-            if(i>=2)
-            {
-                console.log(all_country_codes[i]);   
+        for (let i in all_country_codes) {
+            if (i >= 2) {
                 document.getElementById(all_country_codes[i]).style = "background-color : red; color: white;";
             }
         }
     }
+    function hide_stopwatch()
+    {
+        document.getElementById('unhide').style = `display:block;`;
+        document.getElementById('stopwatch').style = `display:none`;
+    }
+    function unhide_stopwatch()
+    {
+        document.getElementById('stopwatch').style = `display:block`;
+        document.getElementById('unhide').style = `display:none;`;
+    }
+    
+    var ms = 0, s = 0, m = 0;
+    var timer;
+    var stopwatch = document.querySelector('#stopwatch_time');
+
+    function start(){
+        if(!timer)
+        {
+            timer = setInterval(run, 10);
+        }
+    }
+    function run()
+    {
+        stopwatch.textContent = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s) + ":" + (ms < 10 ? "0" + ms : ms);
+        ms++;
+        if(ms==100)
+        {
+            ms = 0;
+            s++;
+        }
+        if(s == 60)
+        {
+            s = 0;
+            m++;
+        }
+    }
+    function pause()
+    {
+        clearInterval(timer);
+        timer = false;
+    }
+    function reset()
+    {
+        clearInterval(timer);
+        timer = false;
+        ms = 0;
+        s = 0;
+        m = 0;
+        stopwatch.textContent = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s) + ":" + (ms < 10 ? "0" + ms : ms);
+    }
+
 </script>
 {% endblock body %}
